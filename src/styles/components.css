@@ -1,0 +1,36 @@
+.panel {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin: 1rem;
+  flex: 1 1 300px;
+  max-width: 400px;
+}
+
+.panel textarea,
+.panel input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+}
+
+.panel button {
+  margin-top: 0.5rem;
+  padding: 0.4rem 1rem;
+  border: none;
+  background-color: var(--color-primary);
+  color: white;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.workspace-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+}

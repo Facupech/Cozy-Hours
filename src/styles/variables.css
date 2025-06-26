@@ -1,0 +1,13 @@
+:root {
+  --color-primary: #0071c5;
+  --color-secondary: #323232;
+  --color-background: #f9f9f9;
+  --color-text: #222222;
+
+  --color-happy: #f6b93b;
+  --color-sad: #3c91e6;
+  --color-focused: #27ae60;
+  --color-tired: #bdc3c7;
+  --color-relaxed: #6c5ce7;
+  --color-stressed: #e74c3c;
+}
