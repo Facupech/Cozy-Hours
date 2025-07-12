@@ -1,0 +1,47 @@
+.nuevo-escritorio-container {
+  margin: 1rem;
+}
+
+.boton-mas {
+  font-size: 2rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #fff;
+  color: #333;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.boton-mas:hover {
+  transform: scale(1.1);
+}
+
+.modal-escritorio {
+  position: fixed;
+  top: 30%;
+  left: 40%;
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-escritorio form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-escritorio input,
+.modal-escritorio select,
+.modal-escritorio button {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}

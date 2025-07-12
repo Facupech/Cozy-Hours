@@ -1,0 +1,47 @@
+.sidebar {
+  position: fixed;
+  top: 50%;
+  left: 0.5rem;
+  transform: translateY(-50%);
+  background: rgba(100, 100, 100, 0.5);
+  border-radius: 2rem;
+  padding: 1rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1000;
+  width: 3.5rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.back-button {
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.icon-buttons .icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: none;
+  margin: 0.5rem 0;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.icon-buttons .icon:hover {
+  transform: scale(1.1);
+}
+
+.icon.yellow { background-color: #f9dc5c; }
+.icon.red { background-color: #ef4e4e; }
+.icon.green { background-color: #45b86d; }
+.icon.blue { background-color: #6c63ff; }

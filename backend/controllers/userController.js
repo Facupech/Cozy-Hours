@@ -1,50 +1,62 @@
-exports.register = (req, res) => {
-  res.send('Registrado');
-};
-
-exports.login = (req, res) => {
-  res.send('Logueado');
-};
-
-exports.getEstado = (req, res) => {
-  res.send({ estado: 'feliz' });
-};
-
-exports.setEstado = (req, res) => {
-  res.send({ mensaje: 'estado actualizado' });
-};
 const db = require('../db');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { SECRET } = require('../middleware/auth');
 
-// 👉 DECLARAR todas las funciones primero:
-
-const register = (req, res) => {
-  const { email, password } = req.body;
-  const hashed = bcrypt.hashSync(password, 8);
-
-  db.query('INSERT INTO usuarios (email, password) VALUES (?, ?)', [email, hashed], (err, result) => {
-    if (err) return res.status(400).send(err);
-    res.send({ message: 'Usuario registrado correctamente' });
-  });
-};
-
-const login = (req, res) => {
+// REGISTRO
+const register = async (req, res) => {
   const { email, password } = req.body;
 
-  db.query('SELECT * FROM usuarios WHERE email = ?', [email], (err, results) => {
-    if (err || results.length === 0) return res.status(400).send({ message: 'Usuario no encontrado' });
+  try {
+    const [existing] = await db.query('SELECT * FROM usuarios WHERE email = ?', [email]);
+    if (existing.length > 0) {
+      return res.status(400).json({ message: 'El email ya está registrado' });
+    }
 
-    const user = results[0];
-    const isValid = bcrypt.compareSync(password, user.password);
-    if (!isValid) return res.status(401).send({ message: 'Contraseña incorrecta' });
+    const hashedPassword = bcrypt.hashSync(password, 8);
+    await db.query('INSERT INTO usuarios (email, password) VALUES (?, ?)', [email, hashedPassword]);
 
-    const token = jwt.sign({ id: user.id }, SECRET, { expiresIn: '1d' });
-    res.send({ token });
-  });
+    res.json({ message: 'Usuario registrado correctamente' });
+  } catch (err) {
+    console.error('Error en el registro:', err);
+    res.status(500).json({ message: 'Error interno del servidor' });
+  }
 };
 
+// LOGIN
+const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const [rows] = await db.query('SELECT * FROM usuarios WHERE email = ?', [email]);
+    if (rows.length === 0) {
+      return res.status(401).json({ message: 'Usuario no encontrado' });
+    }
+
+    const usuario = rows[0];
+    const isValid = bcrypt.compareSync(password, usuario.password);
+
+    if (!isValid) {
+      return res.status(401).json({ message: 'Contraseña incorrecta' });
+    }
+
+    // Token de prueba
+    res.json({
+      token: 'token-fake',
+      user: {
+        id: usuario.id,
+        email: usuario.email,
+        estado_emocional: usuario.estado_emocional
+      }
+    });
+
+  } catch (err) {
+    console.error('Error en login:', err);
+    res.status(500).json({ message: 'Error interno del servidor' });
+  }
+};
+
+// GET ESTADO EMOCIONAL
 const getEstado = (req, res) => {
   db.query('SELECT estado_emocional FROM usuarios WHERE id = ?', [req.userId], (err, results) => {
     if (err) return res.status(400).send(err);
@@ -52,6 +64,7 @@ const getEstado = (req, res) => {
   });
 };
 
+// SET ESTADO EMOCIONAL
 const setEstado = (req, res) => {
   const { estado } = req.body;
   db.query('UPDATE usuarios SET estado_emocional = ? WHERE id = ?', [estado, req.userId], (err) => {
@@ -60,11 +73,10 @@ const setEstado = (req, res) => {
   });
 };
 
-// 👉 Exportar todas las funciones después de declararlas
+// EXPORTACIÓN
 module.exports = {
   register,
   login,
   getEstado,
   setEstado
 };
-

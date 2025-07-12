@@ -1,0 +1,207 @@
+/* Contenedor principal */
+.workspace {
+  position: relative;
+  padding: 2rem;
+}
+/* Grid de widgets */
+.widgets {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Tarjeta genérica */
+.panel {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Cabecera / título dentro de la tarjeta */
+.panel h3 {
+  margin: 0 0 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Botón general dentro de Panel */
+.panel button {
+  align-self: flex-start;
+  background: #ff9fcf;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.panel button:hover {
+  background: #ff6fae;
+}
+
+/* Logout fijo arriba a la derecha */
+.logout-btn {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background: #ff6fae;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 1001;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.logout-btn:hover {
+  background: #ff4f9e;
+}
+/* Fondos pastel suaves */
+.happy      { background: #fff9e6; }
+.sad        { background: #e8f3ff; }
+.focused    { background: #e9fdf0; }
+.tired      { background: #f5f5f5; }
+.relaxed    { background: #f3ecff; }
+.stressed   { background: #ffecec; }
+.workspace {
+  display: flex;
+  flex-direction: row;
+  padding-left: 3rem;
+  position: relative;
+}
+
+.sidebar {
+  position: fixed;
+  top: 4rem;
+  left: 0;
+  width: 3rem;
+  height: 100%;
+  background: #222;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.sidebar:hover {
+  width: 10rem;
+}
+
+.sidebar button {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  text-align: left;
+}
+
+.panels {
+  margin-left: 4rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 2rem;
+  width: 100%;
+}
+
+.panel {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  padding: 1rem;
+  flex: 1 1 45%;
+  min-width: 300px;
+}
+
+.back-btn {
+  position: absolute;
+  top: 1rem;
+  right: 2rem;
+  padding: 0.5rem 1rem;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 10;
+}
+.hud-sidebar-container {
+  position: fixed;
+  top: 6rem;
+  left: 0.5rem;
+  z-index: 1000;
+}
+.hud-sidebar.closed:hover {
+  width: 5rem;
+}
+.hud-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: rgba(128, 128, 128, 0.3); /* transparente */
+  padding: 1rem;
+  border-radius: 2rem;
+  backdrop-filter: blur(8px);
+  transition: width 0.3s ease;
+  width: 3rem;
+  overflow: hidden;
+  align-items: center;
+}
+
+.hud-icon {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.hud-icon:hover {
+  transform: scale(1.2);
+}
+
+.hud-icon.yellow { color: #facc15; }
+.hud-icon.red { color: #ef4444; }
+.hud-icon.green { color: #22c55e; }
+.hud-icon.blue { color: #3b82f6; }
+
+.top-btn {
+  position: fixed;
+  top: 1rem;
+  padding: 0.5rem 1rem;
+  z-index: 1100;
+  background-color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.top-btn.left { left: 1rem; }
+.top-btn.right { right: 1rem; }
+.back-floating-btn {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(6px);
+  color: #000;
+  font-size: 1.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1100;
+  transition: transform 0.2s ease;
+}
+.back-floating-btn:hover {
+  transform: scale(1.1);
+}

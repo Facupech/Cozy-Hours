@@ -1,15 +1,10 @@
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 
-const db = mysql.createConnection({
+const db = mysql.createPool({
   host: 'localhost',
-  user: 'root',           // usuario de XAMPP
-  password: '',           // sin contraseña por defecto
-  database: 'escritorio_emocional'
-});
-
-db.connect((err) => {
-  if (err) throw err;
-  console.log('🟢 Conectado a MySQL');
+  user: 'root',
+  password: '', // ← Cambialo si tenés contraseña en XAMPP
+  database: 'escritorio_emocional',
 });
 
 module.exports = db;

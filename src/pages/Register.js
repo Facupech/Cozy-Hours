@@ -1,30 +1,32 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../styles/Register.css';
 
 export default function Register() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [msg, setMsg] = useState(null);
+  const [estado, setEstado] = useState('relaxed');
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setMsg(null);
     setError(null);
 
     try {
       const res = await fetch('http://localhost:3001/api/users/register', {
         method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ email, password }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, estado_emocional: estado }),
       });
-      const data = await res.json();
 
-      if(res.ok) {
-        setMsg('Registrado correctamente, ya podés iniciar sesión.');
-        setEmail('');
-        setPassword('');
+      const data = await res.json();
+      if (res.ok) {
+        setSuccess(true);
+        setTimeout(() => navigate('/login'), 2000); // redirige al login
       } else {
-        setError(data.message || 'Error al registrar');
+        setError(data.message || 'Error al registrarse');
       }
     } catch {
       setError('Error de conexión');
@@ -32,15 +34,26 @@ export default function Register() {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: 400, margin: 'auto' }}>
-      <h2>Registrarse</h2>
+    <form className="register-container" onSubmit={handleSubmit}>
+      <h2>Crear cuenta</h2>
       <input type="email" placeholder="Email" value={email}
-        onChange={e => setEmail(e.target.value)} required />
+        onChange={(e) => setEmail(e.target.value)} required />
       <input type="password" placeholder="Contraseña" value={password}
-        onChange={e => setPassword(e.target.value)} required />
+        onChange={(e) => setPassword(e.target.value)} required />
+
+      <select value={estado} onChange={(e) => setEstado(e.target.value)} required>
+        <option value="relaxed">Relajado</option>
+        <option value="happy">Feliz</option>
+        <option value="sad">Triste</option>
+        <option value="focused">Concentrado</option>
+        <option value="tired">Cansado</option>
+        <option value="stressed">Estresado</option>
+      </select>
+
       <button type="submit">Registrarse</button>
-      {msg && <p style={{color:'green'}}>{msg}</p>}
-      {error && <p style={{color:'red'}}>{error}</p>}
+
+      {success && <p className="success">✅ Cuenta creada. Redirigiendo...</p>}
+      {error && <p className="error">{error}</p>}
     </form>
   );
 }
