@@ -1,0 +1,1440 @@
+/* Estilos de la página del Dashboard */
+
+/* Fondo de la página del Dashboard - Compatible con zoom */
+.dashboard-page {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  /* Asegurar que el fondo cubre apropiadamente en todo los niveles de zoom */
+}
+
+.dashboard-background-image,
+.dashboard-background-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Asegura que la imagen/video cubra todo el espacio sin distorsión */
+    z-index: 0; /* Más bajo que el contenido principal y los controles flotantes */
+    /* Agrega una transición suave para cambios de fondo */
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* Contenedor de controles flotantes */
+.floating-controls {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* Tarjeta flotante de información del escritorio */
+.floating-desktop-info {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  max-width: 300px;
+}
+
+.floating-desktop-info:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.desktop-info-content {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.desktop-info-content .state-emoji {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.desktop-details {
+  flex: 1;
+}
+
+.desktop-name {
+  margin: 0 0 5px 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.state-name {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  font-weight: 500;
+}
+
+/* Insignia de suscripción flotante */
+.floating-subscription {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  pointer-events: auto;
+}
+
+.floating-subscription .subscription-badge {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 25px;
+  padding: 12px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.floating-subscription .subscription-badge:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.floating-subscription .subscription-badge.free {
+  color: #ffc107;
+  border-color: rgba(255, 193, 7, 0.3);
+}
+
+.floating-subscription .subscription-badge.premium {
+  color: #ffd700;
+  border-color: rgba(255, 215, 0, 0.3);
+}
+
+/* Botones de acción flotantes */
+.floating-actions {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  pointer-events: auto;
+}
+
+.floating-btn {
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.floating-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.floating-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.floating-btn:hover::before {
+  opacity: 1;
+}
+
+.floating-btn:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* Colores de botón específicos */
+.floating-btn.plan-btn {
+  background: rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+.floating-btn.plan-btn:hover {
+  background: rgba(102, 126, 234, 0.3);
+  box-shadow: 0 15px 45px rgba(102, 126, 234, 0.3);
+}
+
+.floating-btn.workspace-btn {
+  background: rgba(74, 144, 226, 0.2);
+  border-color: rgba(74, 144, 226, 0.3);
+}
+
+.floating-btn.workspace-btn:hover {
+  background: rgba(74, 144, 226, 0.3);
+  box-shadow: 0 15px 45px rgba(74, 144, 226, 0.3);
+}
+
+.floating-btn.wallpaper-btn {
+  background: rgba(118, 75, 162, 0.2);
+  border-color: rgba(118, 75, 162, 0.3);
+}
+
+.floating-btn.wallpaper-btn:hover {
+  background: rgba(118, 75, 162, 0.3);
+  box-shadow: 0 15px 45px rgba(118, 75, 162, 0.3);
+}
+
+.floating-btn.logout-btn {
+  background: rgba(220, 53, 69, 0.2);
+  border-color: rgba(220, 53, 69, 0.3);
+}
+
+.floating-btn.logout-btn:hover {
+  background: rgba(220, 53, 69, 0.3);
+  box-shadow: 0 15px 45px rgba(220, 53, 69, 0.3);
+}
+
+/* Launcher de Widget flotante */
+.floating-widget-launcher {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 15px;
+  pointer-events: auto;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50px;
+  padding: 15px 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.floating-widget-launcher:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateX(-50%) translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.floating-widget-btn {
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.floating-widget-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.floating-widget-btn:hover {
+  transform: translateY(-2px) scale(1.1);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.floating-widget-btn:hover::before {
+  opacity: 1;
+}
+
+.floating-widget-btn.active {
+  background: rgba(102, 126, 234, 0.3);
+  border-color: rgba(102, 126, 234, 0.4);
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+}
+
+.floating-widget-btn.active::before {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, transparent 100%);
+  opacity: 1;
+}
+
+.floating-widget-btn:active {
+  transform: translateY(0) scale(1.05);
+}
+
+/* Móvil Responsive */
+@media (max-width: 768px) {
+  .floating-desktop-info {
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    max-width: none;
+    padding: 15px;
+  }
+  
+  .floating-subscription {
+    top: 20px;
+    right: 20px;
+  }
+  
+  .floating-actions {
+    bottom: 100px;
+    right: 20px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 150px;
+  }
+  
+  .floating-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+  
+  .floating-widget-launcher {
+    bottom: 20px;
+    gap: 10px;
+    padding: 10px 15px;
+  }
+  
+  .floating-widget-btn {
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
+  }
+}
+
+/* Estilos de información de suscripciones */
+.subscription-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-right: 1rem;
+}
+
+.subscription-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.subscription-badge.free {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.subscription-badge.premium {
+  background: rgba(255, 215, 0, 0.2);
+  color: #ffd700;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+/* Estilos Base del Botón del Encabezado */
+.header-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 4px;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Botón para mejorar/manejar planes */
+.upgrade-btn {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.upgrade-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Botón del Administrador de Escritorio */
+.desktop-manager-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.desktop-manager-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Botón de configuración de Wallpaper */
+.wallpaper-config-btn {
+  background: rgba(102, 126, 234, 0.2);
+  color: white;
+  border: 1px solid rgba(102, 126, 234, 0.3);
+}
+
+.wallpaper-config-btn:hover {
+  background: rgba(102, 126, 234, 0.3);
+  border-color: rgba(102, 126, 234, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+/* Botón de cierre de sesión */
+.logout-btn {
+  background: rgba(220, 53, 69, 0.15);
+  color: white;
+  border: 1px solid rgba(220, 53, 69, 0.2);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: 8px;
+}
+
+.logout-btn:hover {
+  background: rgba(220, 53, 69, 0.25);
+  border-color: rgba(220, 53, 69, 0.3);
+  transform: translateY(-2px);
+}
+
+.downgrade-btn {
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.downgrade-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Estilos del Estado de Suscripción del Widget */
+.subscription-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.task-count, .note-count {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+.limit-reached {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #ffc107;
+}
+
+.upgrade-link {
+  padding: 0.2rem 0.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upgrade-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+}
+
+/* Estilos Base del Fondo de Superposición del Modal */
+.wallpaper-config-overlay,
+.plan-selector-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s ease;
+}
+
+/* Estilos Base del Contenedor del Modal */
+.wallpaper-config-container,
+.plan-selector-container {
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  margin: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+/* Animación del Modal */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Estilos del botón de cerrado */
+.close-plan-selector,
+.close-wallpaper-config {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.close-plan-selector:hover,
+.close-wallpaper-config:hover {
+  background: rgba(0, 0, 0, 0.15);
+  color: #333;
+  transform: scale(1.1);
+}
+
+/* Estilos del Modal del Selector de Plan - Ahora gestionado por los estilos base del modal de arriba */
+
+.plan-selector-btn {
+  padding: 0.25rem 0.75rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.plan-selector-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes backgroundFloat {
+  0%, 100% { opacity: 1; transform: translateX(0) translateY(0); }
+  33% { opacity: 0.8; transform: translateX(-10px) translateY(-10px); }
+  66% { opacity: 0.9; transform: translateX(10px) translateY(10px); }
+}
+
+/* Diseño principal */
+.dashboard-layout {
+  display: flex;
+  height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* Barra del costado */
+.dashboard-sidebar {
+  width: 280px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-header {
+  margin-bottom: 2rem;
+}
+
+.sidebar-logo {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sidebar-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* Selección de escritorio */
+.desktop-selection {
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.desktop-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.desktop-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.desktop-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.desktop-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.desktop-item:hover::before {
+  opacity: 1;
+}
+
+.desktop-item.active {
+  background: rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.5);
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.2);
+}
+
+.desktop-item.active::before {
+  opacity: 1;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+}
+
+.desktop-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.desktop-emoji {
+  font-size: 1.5rem;
+  filter: grayscale(0.3);
+  transition: filter 0.3s ease;
+}
+
+.desktop-item:hover .desktop-emoji,
+.desktop-item.active .desktop-emoji {
+  filter: grayscale(0);
+}
+
+.desktop-details h4 {
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+}
+
+.desktop-details p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+/* Estado actual */
+.current-state {
+  margin-bottom: 2rem;
+}
+
+.state-display {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.state-emoji {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.state-name {
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+}
+
+.state-description {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+/* Controles del Widget */
+.widget-controls {
+  margin-bottom: 2rem;
+}
+
+.widget-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.widget-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.widget-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.widget-toggle.active {
+  background: rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.4);
+}
+
+.widget-label {
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toggle-switch {
+  width: 40px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  position: relative;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-switch.active {
+  background: rgba(102, 126, 234, 0.6);
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.toggle-switch.active::after {
+  transform: translateX(20px);
+}
+
+/* Botón de cerrar sesión */
+.sidebar-footer {
+  margin-top: auto;
+}
+
+.sign-out-btn {
+  width: 100%;
+  background: rgba(239, 68, 68, 0.2);
+  color: #ff6b6b;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.sign-out-btn:hover {
+  background: rgba(239, 68, 68, 0.3);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Contenido principal */
+.dashboard-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative; /* Asegura que los hijos puedan posicionarse en relación a este */
+  z-index: 1; /* Asegura que el contenido esté por encima del fondo (-2) */
+}
+
+/* Encabezado */
+.dashboard-header {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-title {
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* Área de contenido */
+.dashboard-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+}
+
+/* Área de contenidos */
+.widgets-area {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.widget-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  animation: slideInLeft 0.6s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Área de reproductor de música */
+.music-player-area {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.music-player-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  animation: slideInRight 0.6s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Barra de tareas */
+.dashboard-taskbar {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.75rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.taskbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.taskbar-time {
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.taskbar-date {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.75rem;
+}
+
+.taskbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.taskbar-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.8);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.taskbar-status {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.75rem;
+}
+
+/* Botón para activar/desactivar la barra lateral en móvil */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.5rem;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Estados de carga */
+.dashboard-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding: 2rem;
+}
+
+.dashboard-loading .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.dashboard-loading p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+/* Estados de error */
+/* Estilos del Modal del administrador de escritorio */
+.desktop-manager-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1rem;
+}
+
+.desktop-manager-container {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  max-height: 90vh;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+}
+
+.close-desktop-manager {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2001;
+  transition: all 0.3s ease;
+}
+
+.close-desktop-manager:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.desktop-manager-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-right: 0.5rem;
+}
+
+.desktop-manager-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.dashboard-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  color: white;
+  text-align: center;
+  padding: 2rem;
+}
+
+.error-icon {
+  font-size: 3rem;
+  color: #ff6b6b;
+  margin-bottom: 1rem;
+}
+
+.error-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+}
+
+.error-message {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin: 0 0 2rem 0;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+.retry-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  transform: translateY(-2px);
+}
+
+/* Diseño Responsive */
+@media (max-width: 1024px) {
+  .dashboard-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .music-player-area {
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 999;
+    transform: translateX(-100%);
+  }
+  
+  .dashboard-sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .sidebar-toggle {
+    display: block;
+  }
+  
+  .dashboard-main {
+    width: 100%;
+    padding: 1rem;
+  }
+  
+  .dashboard-header {
+    padding: 1rem;
+    padding-left: 4rem;
+  }
+  
+  .dashboard-content {
+    padding: 1rem;
+    grid-template-columns: 1fr;
+  }
+  
+  .dashboard-taskbar {
+    padding: 0.75rem 1rem;
+  }
+  
+  .taskbar-left,
+  .taskbar-right {
+    gap: 0.5rem;
+  }
+  
+  .header-title {
+    font-size: 1.125rem;
+  }
+  
+  .header-actions {
+    gap: 0.5rem;
+  }
+  
+  .header-btn {
+    padding: 0.5rem;
+    font-size: 0.8125rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header {
+    padding: 0.75rem;
+    padding-left: 3.5rem;
+  }
+  
+  .dashboard-content {
+    padding: 0.75rem;
+  }
+  
+  .widget-container,
+  .music-player-container {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+  
+  .dashboard-sidebar {
+    width: 260px;
+    padding: 1rem;
+  }
+  
+  .sidebar-logo {
+    font-size: 1.25rem;
+  }
+  
+  .desktop-item {
+    padding: 0.75rem;
+  }
+  
+  .desktop-emoji {
+    font-size: 1.25rem;
+  }
+  
+  .desktop-details h4 {
+    font-size: 0.8125rem;
+  }
+  
+  .desktop-details p {
+    font-size: 0.6875rem;
+  }
+  
+  .state-emoji {
+    font-size: 1.5rem;
+  }
+  
+  .state-name {
+    font-size: 0.875rem;
+  }
+  
+  .taskbar-time {
+    font-size: 0.8125rem;
+  }
+  
+  .taskbar-date {
+    font-size: 0.6875rem;
+  }
+}
+
+/* Estados de enfoque para accesibilidad */
+.desktop-item:focus,
+.widget-toggle:focus,
+.header-btn:focus,
+.sign-out-btn:focus,
+.sidebar-toggle:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+/* Modo de alto contraste */
+@media (prefers-contrast: high) {
+  .dashboard-page {
+    background: linear-gradient(135deg, #000080 0%, #000040 100%);
+  }
+  
+  .dashboard-sidebar,
+  .dashboard-header,
+  .dashboard-taskbar,
+  .widget-container,
+  .music-player-container {
+    background: rgba(0, 0, 0, 0.8);
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .desktop-item,
+  .widget-toggle,
+  .header-btn {
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .desktop-item:hover,
+  .widget-toggle:hover,
+  .header-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-page::before {
+    animation: none;
+  }
+  
+  .widget-container,
+  .music-player-container {
+    animation: none;
+  }
+  
+  .desktop-item,
+  .widget-toggle,
+  .header-btn,
+  .sign-out-btn {
+    transition: none;
+  }
+  
+  .desktop-item:hover,
+  .widget-toggle:hover,
+  .header-btn:hover,
+  .sign-out-btn:hover {
+    transform: none;
+  }
+  
+  .taskbar-indicator {
+    animation: none;
+  }
+  
+  .dashboard-loading .loading-spinner {
+    animation: none;
+  }
+}
