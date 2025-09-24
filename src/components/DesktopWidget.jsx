@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../translations/translations';
 import NotesWidget from './NotesWidget';
 import TasksWidget from './TasksWidget';
 import PomodoroWidget from './PomodoroWidget';
@@ -11,6 +13,8 @@ const DesktopWidget = ({ widget, onClose, onMinimize, onMove, desktopId, onUpdat
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const widgetRef = useRef(null);
+  const { language } = useLanguage();
+  const t = translations[language];
 
   const handleMouseDown = (e) => {
   
@@ -106,19 +110,19 @@ const DesktopWidget = ({ widget, onClose, onMinimize, onMove, desktopId, onUpdat
           />
         );
       default:
-        return <div>Tipo de pestaña desconocida</div>;
+        return <div>{t.unknownWidgetType || 'Tipo de pestaña desconocida'}</div>;
     }
   };
 
   const getWidgetTitle = () => {
     switch (widget.type) {
-      case 'notes': return '📝 Notas';
-      case 'tasks': return '✅ Tareas';
-      case 'pomodoro': return '⏰ Pomodoro';
-      case 'settings': return '⚙️ Configuración';
-      case 'music': return '🎵 Musica';
-      case 'wallpaper': return '🎨 Fondo de ambientes';
-      default: return 'Widget';
+      case 'notes': return `📝 ${t.notes}`;
+      case 'tasks': return `✅ ${t.tasks}`;
+      case 'pomodoro': return `⏰ ${t.pomodoro}`;
+      case 'settings': return `⚙️ ${t.settings || 'Configuración'}`;
+      case 'music': return `🎵 ${t.music}`;
+      case 'wallpaper': return `🎨 ${t.wallpaper || 'Fondo de ambientes'}`;
+      default: return t.widget || 'Widget';
     }
   };
 

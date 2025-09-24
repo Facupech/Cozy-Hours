@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../translations/translations';
+import LanguageToggle from '../components/LanguageToggle';
 import { getUserDesktops, getDesktopById } from '../lib/supabase';
 import { useWallpaperSystem } from '../hooks/useWallpaperSystem';
 import AppHeader from '../components/AppHeader';
@@ -18,14 +21,14 @@ import ClockWidget from '../components/ClockWidget';
 import './DashboardPage.css';
 import './DashboardPageButtons.css';
 
-const emotionalStates = {
-  happy: { name: 'Feliz', emoji: '😊', color: '#FFD700' },
-  focused: { name: 'Concentrado', emoji: '🎯', color: '#4A90E2' },
-  relaxed: { name: 'Relajado', emoji: '😌', color: '#7ED321' },
-  energetic: { name: 'Energetico', emoji: '⚡', color: '#FF6B35' },
-  creative: { name: 'Creativo', emoji: '🎨', color: '#9013FE' },
-  calm: { name: 'Calmado', emoji: '🧘', color: '#50E3C2' }
-};
+const getEmotionalStates = (t) => ({
+  happy: { name: t.happy, emoji: '😊', color: '#FFD700' },
+  focused: { name: t.focused, emoji: '🎯', color: '#4A90E2' },
+  relaxed: { name: t.relaxed, emoji: '😌', color: '#7ED321' },
+  energetic: { name: t.energetic, emoji: '⚡', color: '#FF6B35' },
+  creative: { name: t.creative, emoji: '🎨', color: '#9013FE' },
+  calm: { name: t.calm, emoji: '🧘', color: '#50E3C2' }
+});
 
 const DashboardPage = () => {
   const [desktops, setDesktops] = useState([]);
@@ -40,6 +43,9 @@ const DashboardPage = () => {
 
   const { user, signOut } = useAuth();
   const { canCreateMore, getLimit, isPremium, upgradeToPremium, downgradeToFree } = useSubscription();
+  const { language } = useLanguage();
+  const t = translations[language];
+  const emotionalStates = getEmotionalStates(t);
   const navigate = useNavigate();
 
   // Sistema de fondos de pantalla
@@ -183,7 +189,7 @@ const DashboardPage = () => {
     return (
       <div className="loading-container">
         <div className="loading-spinner"></div>
-        <p>Cargando su espacio de trabajo...</p>
+        <p>{t.loadingWorkspace}</p>
       </div>
     );
   }
@@ -192,10 +198,10 @@ const DashboardPage = () => {
     return (
       <div className="dashboard-page">
         <div className="empty-state">
-          <h2>No se encontró ningún espacio de trabajo</h2>
-          <p>¡Creemos tu primer espacio de trabajo emocional!</p>
+          <h2>{t.noWorkspaceFound}</h2>
+          <p>{t.createFirstWorkspace}</p>
           <button onClick={() => navigate('/emotional-setup')} className="btn btn-primary">
-            Crear espacio de trabajo
+            {t.createWorkspace}
           </button>
         </div>
       </div>
@@ -231,6 +237,9 @@ const DashboardPage = () => {
         </video>
       )}
       
+      {/* Botón de traducción */}
+      <LanguageToggle className="dashboard-toggle" />
+      
       {/* Encabezado de la aplicación */}
       <AppHeader 
         showLogo={false} 
@@ -245,7 +254,7 @@ const DashboardPage = () => {
           <button 
             className="floating-btn plan-btn" 
             onClick={() => setShowPlanSelector(true)}
-            title={isPremium() ? 'Gestionar plan' : 'Actualizar a Premium'}
+            title={isPremium() ? t.managePlan : t.upgradeToPremium}
           >
             {isPremium() ? '👑' : '⬆️'}
           </button>
@@ -253,7 +262,7 @@ const DashboardPage = () => {
           <button 
             className="floating-btn workspace-btn"
             onClick={() => setShowDesktopManager(true)}
-            title="Administrar Escritorios"
+            title={t.manageDesktops}
           >
             🖥️
           </button>
@@ -261,7 +270,7 @@ const DashboardPage = () => {
           <button 
             className="floating-btn wallpaper-btn"
             onClick={() => setShowWallpaperConfig(true)}
-            title={isPremium() ? 'Configurar ambientes de fondo' : 'Actualice a Premium para controlar el fondo de pantalla'}
+            title={isPremium() ? t.configureWallpaper : t.upgradeForWallpaper}
           >
             🎨
           </button>
@@ -269,7 +278,7 @@ const DashboardPage = () => {
           <button 
             className="floating-btn logout-btn" 
             onClick={handleSignOut}
-            title="Cerrar sesión"
+            title={t.logout}
           >
             🚪
           </button>
@@ -315,7 +324,7 @@ const DashboardPage = () => {
                 {widget.type === 'pomodoro' && '⏰'}
                 {widget.type === 'settings' && '⚙️'}
                 {widget.type === 'music' && '🎵'}
-                {widget.type.charAt(0).toUpperCase() + widget.type.slice(1)}
+                {t[widget.type] || widget.type.charAt(0).toUpperCase() + widget.type.slice(1)}
               </button>
             );
           })}
@@ -326,7 +335,7 @@ const DashboardPage = () => {
           <button 
             className={`floating-widget-btn ${openWidgets.some(w => w.type === 'notes' && !minimizedWidgets.includes(w.id)) ? 'active' : ''}`}
             onClick={() => openWidget('notes')}
-            title="Notas"
+            title={t.notes}
           >
             📝
           </button>
@@ -334,7 +343,7 @@ const DashboardPage = () => {
           <button 
             className={`floating-widget-btn ${openWidgets.some(w => w.type === 'tasks' && !minimizedWidgets.includes(w.id)) ? 'active' : ''}`}
             onClick={() => openWidget('tasks')}
-            title="Tareas"
+            title={t.tasks}
           >
             ✅
           </button>
@@ -342,7 +351,7 @@ const DashboardPage = () => {
           <button 
             className={`floating-widget-btn ${openWidgets.some(w => w.type === 'pomodoro' && !minimizedWidgets.includes(w.id)) ? 'active' : ''}`}
             onClick={() => openWidget('pomodoro')}
-            title="Pomodoro"
+            title={t.pomodoro}
           >
             ⏰
           </button>
@@ -350,7 +359,7 @@ const DashboardPage = () => {
           <button 
             className={`floating-widget-btn ${openWidgets.some(w => w.type === 'music' && !minimizedWidgets.includes(w.id)) ? 'active' : ''}`}
             onClick={() => openWidget('music')}
-            title="Musica"
+            title={t.music}
           >
             🎵
           </button>

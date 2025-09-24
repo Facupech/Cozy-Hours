@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { FiPlus, FiEdit2, FiTrash2, FiCheck, FiX } from 'react-icons/fi';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../translations/translations';
 import './NotesWidget.css';
 
 const STORAGE_KEY = 'cozy-notes';
 
 const NotesWidget = ({ onClose }) => {
+  const { language } = useLanguage();
+  const t = translations[language];
+  
   const [notes, setNotes] = useState(() => {
     // Cargar notas desde localStorage al iniciar
     const savedNotes = localStorage.getItem(STORAGE_KEY);
     return savedNotes ? JSON.parse(savedNotes) : [
       { 
         id: 1, 
-        title: 'Nota de ejemplo', 
-        content: 'Esta es una nota de ejemplo. ¡Pruébala!', 
+        title: t.exampleNoteTitle || 'Nota de ejemplo', 
+        content: t.exampleNoteContent || 'Esta es una nota de ejemplo. ¡Pruébala!', 
         updatedAt: new Date().toISOString() 
       }
     ];
@@ -68,7 +73,7 @@ const NotesWidget = ({ onClose }) => {
 
   // Eliminar una nota
   const handleDeleteNote = (id) => {
-    if (window.confirm('¿Estás seguro de que quieres eliminar esta nota?')) {
+    if (window.confirm(t.confirmDeleteNote || '¿Estás seguro de que quieres eliminar esta nota?')) {
       setNotes(notes.filter(note => note.id !== id));
       if (editingNote?.id === id) {
         setEditingNote(null);
@@ -87,13 +92,13 @@ const NotesWidget = ({ onClose }) => {
   return (
     <div className="notes-widget">
       <div className="widget-header">
-        <h3>Mis Notas</h3>
+        <h3>{t.myNotes || 'Mis Notas'}</h3>
         <div className="widget-actions">
           <button 
             className="add-note-button"
             onClick={() => setShowAddForm(true)}
           >
-            <FiPlus /> Nueva nota
+            <FiPlus /> {t.newNote || 'Nueva nota'}
           </button>
           <button className="close-button" onClick={onClose}>
             ×
@@ -103,7 +108,7 @@ const NotesWidget = ({ onClose }) => {
 
       <div className="notes-content">
         {loading ? (
-          <div className="loading">Cargando...</div>
+          <div className="loading">{t.loading || 'Cargando...'}</div>
         ) : (
           <div className="notes-content-inner">
             {showAddForm && (
@@ -112,14 +117,14 @@ const NotesWidget = ({ onClose }) => {
                   <input
                     type="text"
                     className="note-title-input"
-                    placeholder="Título de la nota"
+                    placeholder={t.noteTitlePlaceholder || 'Título de la nota'}
                     value={newNote.title}
                     onChange={(e) => setNewNote({...newNote, title: e.target.value})}
                     autoFocus
                   />
                   <textarea
                     className="note-content-input"
-                    placeholder="Escribe tu nota aquí..."
+                    placeholder={t.noteContentPlaceholder || 'Escribe tu nota aquí...'}
                     value={newNote.content}
                     onChange={(e) => setNewNote({...newNote, content: e.target.value})}
                     rows="4"
@@ -132,14 +137,14 @@ const NotesWidget = ({ onClose }) => {
                         setNewNote({ title: '', content: '' });
                       }}
                     >
-                      <FiX /> Cancelar
+                      <FiX /> {t.cancel || 'Cancelar'}
                     </button>
                     <button 
                       className="save-button"
                       onClick={handleAddNote}
                       disabled={!newNote.title.trim()}
                     >
-                      <FiCheck /> Guardar
+                      <FiCheck /> {t.save || 'Guardar'}
                     </button>
                   </div>
                 </div>
@@ -148,12 +153,12 @@ const NotesWidget = ({ onClose }) => {
             
             {!showAddForm && notes.length === 0 && (
               <div className="empty-notes">
-                <p>No hay notas aún</p>
+                <p>{t.noNotesYet || 'No hay notas aún'}</p>
                 <button 
                   className="add-note-button"
                   onClick={() => setShowAddForm(true)}
                 >
-                  <FiPlus /> Crear mi primera nota
+                  <FiPlus /> {t.createFirstNote || 'Crear mi primera nota'}
                 </button>
               </div>
             )}
@@ -170,14 +175,14 @@ const NotesWidget = ({ onClose }) => {
                             className="note-title-input"
                             value={editingNote.title}
                             onChange={(e) => setEditingNote({...editingNote, title: e.target.value})}
-                            placeholder="Título"
+                            placeholder={t.title || 'Título'}
                             autoFocus
                           />
                           <textarea
                             className="note-content-input"
                             value={editingNote.content}
                             onChange={(e) => setEditingNote({...editingNote, content: e.target.value})}
-                            placeholder="Contenido de la nota"
+                            placeholder={t.noteContentPlaceholder || 'Contenido de la nota'}
                             rows="3"
                           />
                           <div className="note-actions">
@@ -186,13 +191,13 @@ const NotesWidget = ({ onClose }) => {
                               onClick={() => handleUpdateNote(editingNote)}
                               disabled={!editingNote.title.trim()}
                             >
-                              <FiCheck /> Guardar
+                              <FiCheck /> {t.save || 'Guardar'}
                             </button>
                             <button 
                               className="cancel-button"
                               onClick={() => setEditingNote(null)}
                             >
-                              <FiX /> Cancelar
+                              <FiX /> {t.cancel || 'Cancelar'}
                             </button>
                           </div>
                         </div>
@@ -207,7 +212,7 @@ const NotesWidget = ({ onClose }) => {
                                   e.stopPropagation();
                                   setEditingNote({...note});
                                 }}
-                                title="Editar nota"
+                                title={t.editNote || 'Editar nota'}
                               >
                                 <FiEdit2 />
                               </button>
@@ -217,18 +222,18 @@ const NotesWidget = ({ onClose }) => {
                                   e.stopPropagation();
                                   handleDeleteNote(note.id);
                                 }}
-                                title="Eliminar nota"
+                                title={t.deleteNote || 'Eliminar nota'}
                               >
                                 <FiTrash2 />
                               </button>
                             </div>
                           </div>
                           <div className="note-content">
-                            {note.content || <span className="empty-content">Sin contenido</span>}
+                            {note.content || <span className="empty-content">{t.noContent || 'Sin contenido'}</span>}
                           </div>
                           <div className="note-footer">
                             <span className="note-date">
-                              {new Date(note.updatedAt).toLocaleDateString('es-ES', {
+                              {new Date(note.updatedAt).toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US', {
                                 day: '2-digit',
                                 month: 'short',
                                 year: 'numeric',

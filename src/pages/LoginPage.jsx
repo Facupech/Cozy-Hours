@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../translations/translations';
+import LanguageToggle from '../components/LanguageToggle';
 import { supabase } from '../lib/supabase';
 import './AuthPages.css';
 
@@ -16,6 +19,8 @@ const LoginPage = () => {
   const [resetSent, setResetSent] = useState(false);
   const [resetError, setResetError] = useState('');
   const { signIn } = useAuth();
+  const { language } = useLanguage();
+  const t = translations[language];
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -37,13 +42,13 @@ const LoginPage = () => {
     const newErrors = {};
 
     if (!formData.email) {
-      newErrors.email = 'email requerido';
+      newErrors.email = t.emailRequired;
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'email invalido';
+      newErrors.email = t.invalidEmail;
     }
 
     if (!formData.password) {
-      newErrors.password = 'Contraseña requerida';
+      newErrors.password = t.passwordRequired;
     }
 
     setErrors(newErrors);
@@ -63,9 +68,9 @@ const LoginPage = () => {
       
       if (error) {
         if (error.message.includes('Credencial de inicio de sesión no válidas')) {
-          setErrors({ general: 'Correo electrónico o contraseña no válidos' });
+          setErrors({ general: t.invalidCredentials });
         } else if (error.message.includes('Correo electrónico no confirmado')) {
-          setErrors({ general: 'Por favor revise su correo electrónico y confirme su cuenta antes de iniciar sesión.' });
+          setErrors({ general: t.emailNotConfirmed });
         } else {
           setErrors({ general: error.message });
         }
@@ -75,7 +80,7 @@ const LoginPage = () => {
       // Verificar si el usuario ha completado la configuración emocional
       navigate('/emotional-setup');
     } catch (error) {
-      setErrors({ general: 'Se produjo un error inesperado. Inténtalo de nuevo.' });
+      setErrors({ general: t.unexpectedError });
     } finally {
       setLoading(false);
     }
@@ -85,12 +90,12 @@ const LoginPage = () => {
     e.preventDefault();
     
     if (!resetEmail) {
-      setResetError('Por favor ingrese su correo electrónico');
+      setResetError(t.pleaseEnterEmail);
       return;
     }
     
     if (!/\S+@\S+\.\S+/.test(resetEmail)) {
-      setResetError('Por favor ingrese un correo electrónico válido');
+      setResetError(t.pleaseEnterValidEmail);
       return;
     }
     
@@ -108,7 +113,7 @@ const LoginPage = () => {
       setResetSent(true);
     } catch (error) {
       console.error('Error al enviar el correo de recuperación:', error);
-      setResetError(error.message || 'Ocurrió un error al enviar el correo de recuperación. Por favor, inténtalo de nuevo.');
+      setResetError(error.message || t.recoveryEmailError);
     } finally {
       setLoading(false);
     }
@@ -124,14 +129,15 @@ const LoginPage = () => {
   return (
     <div className="auth-page">
       <div className="auth-container">
+        <LanguageToggle className="auth-language-toggle" />
         {!showResetForm ? (
           <>
             <div className="auth-header">
               <Link to="/" className="back-link">
-                ← Volver a la página de inicio
+                {t.backToHome}
               </Link>
-              <h1 className="auth-title">Bienvenido de nuevo</h1>
-              <p className="auth-subtitle">Inicie sesión en su cuenta de Cozy Hours</p>
+              <h1 className="auth-title">{t.welcomeBack}</h1>
+              <p className="auth-subtitle">{t.loginSubtitle}</p>
             </div>
 
             <form className="auth-form" onSubmit={handleSubmit}>
@@ -142,7 +148,7 @@ const LoginPage = () => {
               )}
 
               <div className="form-group">
-                <label htmlFor="email" className="form-label">Email</label>
+                <label htmlFor="email" className="form-label">{t.email}</label>
                 <input
                   type="email"
                   id="email"
@@ -150,14 +156,14 @@ const LoginPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className={`form-input ${errors.email ? 'error' : ''}`}
-                  placeholder="Escribe tu email"
+                  placeholder={t.emailPlaceholder}
                   disabled={loading}
                 />
                 {errors.email && <span className="field-error">{errors.email}</span>}
               </div>
 
               <div className="form-group">
-                <label htmlFor="password" className="form-label">Contraseña</label>
+                <label htmlFor="password" className="form-label">{t.password}</label>
                 <input
                   type="password"
                   id="password"
@@ -165,7 +171,7 @@ const LoginPage = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className={`form-input ${errors.password ? 'error' : ''}`}
-                  placeholder="Escribe tu contraseña"
+                  placeholder={t.passwordPlaceholder}
                   disabled={loading}
                 />
                 {errors.password && <span className="field-error">{errors.password}</span>}
@@ -178,7 +184,7 @@ const LoginPage = () => {
                   onClick={() => setShowResetForm(true)}
                   disabled={loading}
                 >
-                  ¿Olvidaste tu contraseña?
+                  {t.forgotPassword}
                 </button>
               </div>
 
@@ -190,19 +196,19 @@ const LoginPage = () => {
                 {loading ? (
                   <>
                     <span className="loading-spinner"></span>
-                    Iniciar sesión...
+                    {t.signingIn}
                   </>
                 ) : (
-                  'Iniciar sesión'
+                  t.signIn
                 )}
               </button>
             </form>
 
             <div className="auth-footer">
               <p>
-                ¿No tienes una cuenta?{' '}
+                {t.noAccount}{' '}
                 <Link to="/register" className="auth-link">
-                  Regístrate aquí
+                  {t.signUpHere}
                 </Link>
               </p>
             </div>
@@ -215,13 +221,13 @@ const LoginPage = () => {
                 className="back-link"
                 onClick={handleBackToLogin}
               >
-                ← Volver al inicio de sesión
+                {t.backToLogin}
               </button>
-              <h1 className="auth-title">Recuperar contraseña</h1>
+              <h1 className="auth-title">{t.resetPassword}</h1>
               <p className="auth-subtitle">
                 {resetSent 
-                  ? 'Revisa tu correo electrónico para restablecer tu contraseña.'
-                  : 'Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.'}
+                  ? t.resetPasswordSent
+                  : t.resetPasswordSubtitle}
               </p>
             </div>
 
@@ -234,14 +240,14 @@ const LoginPage = () => {
                 )}
 
                 <div className="form-group">
-                  <label htmlFor="reset-email" className="form-label">Correo electrónico</label>
+                  <label htmlFor="reset-email" className="form-label">{t.emailAddress}</label>
                   <input
                     type="email"
                     id="reset-email"
                     value={resetEmail}
                     onChange={(e) => setResetEmail(e.target.value)}
                     className="form-input"
-                    placeholder="tucorreo@ejemplo.com"
+                    placeholder={t.emailPlaceholderReset}
                     disabled={loading}
                     required
                   />
@@ -255,24 +261,24 @@ const LoginPage = () => {
                   {loading ? (
                     <>
                       <span className="loading-spinner"></span>
-                      Enviando...
+                      {t.sending}
                     </>
                   ) : (
-                    'Enviar enlace de recuperación'
+                    t.sendRecoveryLink
                   )}
                 </button>
               </form>
             ) : (
               <div className="text-center">
                 <div className="success-message">
-                  <p>Hemos enviado un correo a <strong>{resetEmail}</strong> con instrucciones para restablecer tu contraseña.</p>
-                  <p>Si no ves el correo, revisa tu carpeta de spam.</p>
+                  <p>{t.resetEmailSent} <strong>{resetEmail}</strong> {t.resetEmailSent2}</p>
+                  <p>{t.checkSpam}</p>
                 </div>
                 <button 
                   className="btn btn-secondary mt-4"
                   onClick={handleBackToLogin}
                 >
-                  Volver al inicio de sesión
+                  {t.backToLoginBtn}
                 </button>
               </div>
             )}

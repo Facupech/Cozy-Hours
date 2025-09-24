@@ -1,13 +1,18 @@
 import React from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../translations/translations';
 import './MusicPlayer.css';
 
 const MusicPlayer = () => {
+  const { language } = useLanguage();
+  const t = translations[language];
+
   return (
     <div className="music-player">
       <div className="music-player-message">
-        <h3>¡Próximamente!</h3>
-        <p>Estamos trabajando en el reproductor de música para ofrecerte la mejor experiencia.</p>
-        <p>Muy pronto podrás disfrutar de listas de reproducción personalizadas según tu estado de ánimo.</p>
+        <h3>{t.comingSoon || '¡Próximamente!'}</h3>
+        <p>{t.musicPlayerMessage || 'Estamos trabajando en el reproductor de música para ofrecerte la mejor experiencia.'}</p>
+        <p>{t.musicPlayerDetails || 'Muy pronto podrás disfrutar de listas de reproducción personalizadas según tu estado de ánimo.'}</p>
       </div>
     </div>
   );

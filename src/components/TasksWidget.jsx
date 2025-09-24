@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { createTask, getDesktopTasks, updateTask, deleteTask } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../translations/translations';
 import './Widget.css';
 
 const TasksWidget = ({ desktopId, onClose, isDesktopMode = false }) => {
   const { user } = useAuth();
   const { canCreateMore, getLimit, getRemainingCount, isPremium, upgradeToPremium } = useSubscription();
+  const { language } = useLanguage();
+  const t = translations[language];
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
   const [editingId, setEditingId] = useState(null);
@@ -35,7 +39,7 @@ const TasksWidget = ({ desktopId, onClose, isDesktopMode = false }) => {
 
     // Chequear límites de suscripción
     if (!canCreateMore('tasks', tasks.length)) {
-      alert(`Free plan is limited to ${getLimit('tasks')} tasks. Upgrade to Premium for unlimited tasks!`);
+      alert(t.freePlanTaskLimit || `Free plan is limited to ${getLimit('tasks')} tasks. Upgrade to Premium for unlimited tasks!`);
       return;
     }
 
@@ -122,11 +126,11 @@ const TasksWidget = ({ desktopId, onClose, isDesktopMode = false }) => {
     <div className={`widget tasks-widget ${isDesktopMode ? 'desktop-mode' : ''}`}>
       {!isDesktopMode && (
         <div className="widget-header">
-          <h3 className="widget-title">✅ Tareas</h3>
+          <h3 className="widget-title">✅ {t.tasks}</h3>
           <div className="task-stats">
             {tasks.length > 0 && (
               <span className="stats-text">
-                {completedTasks.length}/{tasks.length} completado
+                {completedTasks.length}/{tasks.length} {t.completed || 'completado'}
               </span>
             )}
           </div>
@@ -140,7 +144,7 @@ const TasksWidget = ({ desktopId, onClose, isDesktopMode = false }) => {
             type="text"
             value={newTask}
             onChange={(e) => setNewTask(e.target.value)}
-            placeholder="Añadir una nueva tarea..."
+            placeholder={t.addNewTask || 'Añadir una nueva tarea...'}
             className="task-input"
             disabled={!canCreateMore('tasks', tasks.length)}
           />
@@ -149,20 +153,20 @@ const TasksWidget = ({ desktopId, onClose, isDesktopMode = false }) => {
             className="btn btn-primary btn-sm"
             disabled={!canCreateMore('tasks', tasks.length)}
           >
-            añadir tarea
+            {t.addTask || 'añadir tarea'}
           </button>
         </form>
         
         {/* Estado de suscripción */}
         <div className="subscription-status">
           <span className="task-count">
-            {tasks.length}/{isPremium() ? '∞' : getLimit('tasks')} tareas
+            {tasks.length}/{isPremium() ? '∞' : getLimit('tasks')} {t.tasks}
           </span>
           {!isPremium() && !canCreateMore('tasks', tasks.length) && (
             <div className="limit-reached">
-              <span>Limite alcanzado</span>
+              <span>{t.limitReached || 'Limite alcanzado'}</span>
               <button className="upgrade-link" onClick={upgradeToPremium}>
-                Mejorar a premium
+                {t.upgradeToPremium}
               </button>
             </div>
           )}

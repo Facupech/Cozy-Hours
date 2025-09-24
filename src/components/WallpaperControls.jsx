@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { useSubscription } from '../contexts/SubscriptionContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../translations/translations';
 import { useWallpaperSystem } from '../hooks/useWallpaperSystem'; 
 import './WallpaperControls.css';
 
-const emotionalStates = {
-  happy: { name: 'Feliz', emoji: '😊' },
-  focused: { name: 'Concentrado', emoji: '🎯' },
-  relaxed: { name: 'Relajado', emoji: '😌' },
-  energetic: { name: 'Energético', emoji: '⚡' },
-  creative: { name: 'Creativo', emoji: '🎨' },
-  calm: { name: 'Calmado', emoji: '🧘' }
-};
+const getEmotionalStates = (t) => ({
+  happy: { name: t.happy || 'Feliz', emoji: '😊' },
+  focused: { name: t.focused || 'Concentrado', emoji: '🎯' },
+  relaxed: { name: t.relaxed || 'Relajado', emoji: '😌' },
+  energetic: { name: t.energetic || 'Energético', emoji: '⚡' },
+  creative: { name: t.creative || 'Creativo', emoji: '🎨' },
+  calm: { name: t.calm || 'Calmado', emoji: '🧘' }
+});
 
 const WallpaperControls = ({ 
   wallpaperSystem, 
@@ -19,6 +21,9 @@ const WallpaperControls = ({
   isDesktopMode = false 
 }) => {
   const { isPremium, upgradeToPremium } = useSubscription();
+  const { language } = useLanguage();
+  const t = translations[language];
+  const emotionalStates = getEmotionalStates(t);
   const [showGallery, setShowGallery] = useState(false);
 
   const {
@@ -58,9 +63,9 @@ const WallpaperControls = ({
     <div className={`wallpaper-controls ${isDesktopMode ? 'desktop-mode' : ''}`}>
       <div className="wallpaper-controls-header">
         <div className="header-content">
-          <h3>🎨 Fondos de ambientes</h3>
+          <h3>🎨 {t.wallpaper || 'Fondos de ambientes'}</h3>
           <div className="emotional-state-badge">
-            Modo {emotionalStates[emotionalState]?.name || emotionalState}
+            {t.mode || 'Modo'} {emotionalStates[emotionalState]?.name || emotionalState}
           </div>
         </div>
         {onClose && (
@@ -87,18 +92,18 @@ const WallpaperControls = ({
               muted 
               playsInline 
             >
-              Tu navegador no soporta el tag de video.
+              {t.browserNotSupportVideo || 'Tu navegador no soporta el tag de video.'}
             </video>
           )}
-          {!currentWallpaper && <div className="no-wallpaper-placeholder">No wallpaper selected</div>}
+          {!currentWallpaper && <div className="no-wallpaper-placeholder">{t.noWallpaperSelected || 'No wallpaper selected'}</div>}
         </div>
         <div className="wallpaper-details">
-          <h4>{currentWallpaper?.name || 'No wallpaper selected'}</h4>
+          <h4>{currentWallpaper?.name || t.noWallpaperSelected || 'No wallpaper selected'}</h4>
           <p className="wallpaper-type">
-            {currentWallpaper?.type === 'image' && '📸 Imagen'}
-            {currentWallpaper?.type === 'video' && '🎬 Video'}
-            {!currentWallpaper?.type && '❔ Tipo desconocido'}
-            {currentWallpaper?.premium && <span className="premium-badge">👑 Premium</span>}
+            {currentWallpaper?.type === 'image' && `📸 ${t.image || 'Imagen'}`}
+            {currentWallpaper?.type === 'video' && `🎬 ${t.video || 'Video'}`}
+            {!currentWallpaper?.type && `❔ ${t.unknownType || 'Tipo desconocido'}`}
+            {currentWallpaper?.premium && <span className="premium-badge">👑 {t.premium}</span>}
           </p>
         </div>
       </div>
@@ -106,10 +111,10 @@ const WallpaperControls = ({
       {isPremium() ? (
         <div className="premium-controls">
           <div className="control-section">
-            <h4>🔄 Auto rotacion</h4>
+            <h4>🔄 {t.autoRotation || 'Auto rotacion'}</h4>
             <div className="rotation-toggle">
               <span className="rotation-toggle-label">
-                {rotationEnabled ? 'Auto Rotacion activada' : 'Auto Rotacion desactivada'}
+                {rotationEnabled ? (t.autoRotationEnabled || 'Auto Rotacion activada') : (t.autoRotationDisabled || 'Auto Rotacion desactivada')}
               </span>
               <label className="toggle-switch">
                 <input
@@ -123,7 +128,7 @@ const WallpaperControls = ({
 
             {rotationEnabled && (
               <div className="rotation-interval">
-                <label>Cambiar cada:</label>
+                <label>{t.changeEvery || 'Cambiar cada'}:</label>
                 <select
                   value={rotationInterval}
                   onChange={(e) => setRotationInterval(Number(e.target.value))}
@@ -140,7 +145,7 @@ const WallpaperControls = ({
           </div>
 
           <div className="control-section">
-            <h4>🎯 Control manual</h4>
+            <h4>🎯 {t.manualControl || 'Control manual'}</h4>
             <div className="manual-controls">
               <button 
                 className="control-btn next-btn"
@@ -160,7 +165,7 @@ const WallpaperControls = ({
 
           {showGallery && (
             <div className="wallpaper-gallery">
-              <h4>🎨 Fondos disponibles</h4>
+              <h4>🎨 {t.availableWallpapers || 'Fondos disponibles'}</h4>
               <div className="gallery-grid">
                 {allWallpapers.map(wallpaper => (
                   <div
@@ -188,7 +193,7 @@ const WallpaperControls = ({
                             playsInline 
                             preload="metadata" 
                         >
-                            Tu navegador no soporta la etiqueta de video.
+                            {t.browserNotSupportVideo || 'Tu navegador no soporta la etiqueta de video.'}
                         </video>
                     )}
                     <div className="gallery-overlay">
@@ -209,16 +214,16 @@ const WallpaperControls = ({
       ) : (
         <div className="upgrade-prompt">
           <div className="upgrade-content">
-            <h4>🔒 Control de fondos premium</h4>
-            <p>Desbloquea funciones avanzadas de fondo de pantalla:</p>
+            <h4>🔒 {t.premiumWallpaperControl || 'Control de fondos premium'}</h4>
+            <p>{t.unlockAdvancedWallpaperFeatures || 'Desbloquea funciones avanzadas de fondo de pantalla'}:</p>
             <ul>
-              <li>🎨 Acceso a fondos de pantalla con imágenes premium</li>
-              <li>🔄 Controlar la configuración de rotación automática</li>
-              <li>🎯 Selección manual de fondo de pantalla</li>
-              <li>🖼️ Explora la galería completa de fondos de pantalla</li>
+              <li>🎨 {t.accessPremiumWallpapers || 'Acceso a fondos de pantalla con imágenes premium'}</li>
+              <li>🔄 {t.controlAutoRotationSettings || 'Controlar la configuración de rotación automática'}</li>
+              <li>🎯 {t.manualWallpaperSelection || 'Selección manual de fondo de pantalla'}</li>
+              <li>🖼️ {t.exploreFullWallpaperGallery || 'Explora la galería completa de fondos de pantalla'}</li>
             </ul>
             <button className="upgrade-btn" onClick={handleUpgrade}>
-              👑 Mejora a Premium
+              👑 {t.upgradeToPremium}
             </button>
           </div>
         </div>
@@ -226,20 +231,20 @@ const WallpaperControls = ({
 
       <div className="wallpaper-stats">
         <div className="stat">
-          <span className="stat-label">Disponible:</span>
+          <span className="stat-label">{t.available || 'Disponible'}:</span>
           <span className="stat-value">{availableWallpapers.length}</span>
         </div>
         <div className="stat">
-          <span className="stat-label">Premium:</span>
+          <span className="stat-label">{t.premium}:</span>
           <span className="stat-value">
             {allWallpapers.filter(w => w.premium).length}
           </span>
         </div>
         <div className="stat">
-          <span className="stat-label">tipo:</span>
+          <span className="stat-label">{t.type || 'tipo'}:</span>
           <span className="stat-value">
-            {currentWallpaper?.type === 'image' ? 'Imagen' : 
-             currentWallpaper?.type === 'video' ? 'Video' : 'N/A'}
+            {currentWallpaper?.type === 'image' ? (t.image || 'Imagen') : 
+             currentWallpaper?.type === 'video' ? (t.video || 'Video') : 'N/A'}
           </span>
         </div>
       </div>

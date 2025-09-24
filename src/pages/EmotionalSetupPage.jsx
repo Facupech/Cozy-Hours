@@ -2,18 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../translations/translations';
+import LanguageToggle from '../components/LanguageToggle';
 import { createDesktop, createUserProfile, getUserDesktops } from '../lib/supabase';
 import AppHeader from '../components/AppHeader';
 import DesktopManager from '../components/DesktopManager';
 import './EmotionalSetupPage.css';
 
-const emotionalStates = [
-  { id: 'happy', name: 'Feliz', emoji: '😊', color: '#FFD700' },
-  { id: 'focused', name: 'Enfocado', emoji: '🎯', color: '#4A90E2' },
-  { id: 'relaxed', name: 'Relajado', emoji: '😌', color: '#7ED321' },
-  { id: 'energetic', name: 'Energetico', emoji: '⚡', color: '#FF6B35' },
-  { id: 'creative', name: 'Creativo', emoji: '🎨', color: '#9013FE' },
-  { id: 'calm', name: 'Calmado', emoji: '🧘', color: '#50E3C2' }
+const getEmotionalStates = (t) => [
+  { id: 'happy', name: t.happy, emoji: '😊', color: '#FFD700' },
+  { id: 'focused', name: t.focused, emoji: '🎯', color: '#4A90E2' },
+  { id: 'relaxed', name: t.relaxed, emoji: '😌', color: '#7ED321' },
+  { id: 'energetic', name: t.energetic, emoji: '⚡', color: '#FF6B35' },
+  { id: 'creative', name: t.creative, emoji: '🎨', color: '#9013FE' },
+  { id: 'calm', name: t.calm, emoji: '🧘', color: '#50E3C2' }
 ];
 
 const EmotionalSetupPage = () => {
@@ -26,6 +29,9 @@ const EmotionalSetupPage = () => {
   const [hasDesktops, setHasDesktops] = useState(false);
   const { user } = useAuth();
   const { isFirstLogin, resetFirstLoginFlag } = useSubscription();
+  const { language } = useLanguage();
+  const t = translations[language];
+  const emotionalStates = getEmotionalStates(t);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -61,7 +67,7 @@ const EmotionalSetupPage = () => {
     e.preventDefault();
     
     if (!selectedState || !desktopName.trim()) {
-      setError('Please select an emotional state and enter a desktop name');
+      setError(t.pleaseSelectStateAndName);
       return;
     }
 
@@ -116,29 +122,31 @@ const EmotionalSetupPage = () => {
 
   return (
     <div className="emotional-setup-page">
+      {/* Botón de traducción */}
+      <LanguageToggle className="dashboard-toggle" />
+      
       {/* Encabezado de la aplicación */}
-      <AppHeader title="Configuración de Espacio de Trabajo" />
+      <AppHeader title={t.workspaceSetup} />
       
       <div className="emotional-setup-container">
         <div className="setup-header">
           <h1 className="setup-title">
-            ¡Bienvenido a Cozy Hours!
+            {t.welcomeToCozyHours}
           </h1>
           {isFirstLogin && (
             <div className="first-login-welcome">
               <div className="welcome-badge">
-                🎉 ¡Bienvenido! Estás comenzando con el <strong>Plan Gratuito</strong>
+                {t.welcomeBadge}
               </div>
               <p className="welcome-details">
-                Puedes crear hasta 3 espacios de trabajo, 10 tareas y 5 notas. 
-                ¡Actualiza a Premium cuando quieras para acceso ilimitado!
+                {t.welcomeDetails}
               </p>
             </div>
           )}
           <p className="setup-subtitle">
             {hasDesktops 
-              ? 'Crea un nuevo espacio de trabajo o administra los existentes'
-              : 'Elige tu estado emocional actual para crear tu espacio de trabajo personalizado'
+              ? t.createNewWorkspace
+              : t.chooseEmotionalState
             }
           </p>
           
@@ -149,7 +157,7 @@ const EmotionalSetupPage = () => {
                 className="btn-manage-workspaces"
                 onClick={() => setShowDesktopManager(true)}
               >
-                🖥️ Administrar espacios de trabajo existentes ({existingDesktops.length})
+                {t.manageExistingWorkspaces} ({existingDesktops.length})
               </button>
             </div>
           )}
@@ -177,7 +185,7 @@ const EmotionalSetupPage = () => {
 
           <div className="form-group">
             <label htmlFor="desktopName" className="form-label">
-              Nombra tu espacio de trabajo
+              {t.nameYourWorkspace}
             </label>
             <input
               type="text"
@@ -185,14 +193,14 @@ const EmotionalSetupPage = () => {
               value={desktopName}
               onChange={(e) => setDesktopName(e.target.value)}
               className="form-input"
-              placeholder="Ej: Felizuwu"
+              placeholder={t.workspaceNamePlaceholder}
               disabled={loading}
             />
           </div>
 
           {selectedState && desktopName && (
             <div className="desktop-preview">
-              <h3 className="preview-title">Vista previa</h3>
+              <h3 className="preview-title">{t.preview}</h3>
               <div className="preview-content">
                 <span className="preview-emoji">{selectedState.emoji}</span>
                 <span className="preview-name">{desktopName}</span>
@@ -213,10 +221,10 @@ const EmotionalSetupPage = () => {
               {loading ? (
                 <>
                   <span className="loading-spinner"></span>
-                  Creando tu espacio...
+                  {t.creatingYourSpace}
                 </>
               ) : (
-                'Crear mi escritorio'
+                t.createMyDesktop
               )}
             </button>
           </div>

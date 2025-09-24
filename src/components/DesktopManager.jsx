@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../translations/translations';
 import { getUserDesktops, createDesktop, updateDesktop, deleteDesktop } from '../lib/supabase';
 import './DesktopManager.css';
 
@@ -26,6 +28,8 @@ const DesktopManager = ({ onDesktopSelect, currentDesktop, onDesktopUpdate }) =>
   const [error, setError] = useState('');
   const { user } = useAuth();
   const { canCreateMore, getLimit, isPremium, upgradeToPremium } = useSubscription();
+  const { language } = useLanguage();
+  const t = translations[language];
 
   useEffect(() => {
     loadDesktops();
@@ -40,7 +44,7 @@ const DesktopManager = ({ onDesktopSelect, currentDesktop, onDesktopUpdate }) =>
       if (error) throw error;
       setDesktops(data || []);
     } catch (err) {
-      setError('Error al cargar escritorios: ' + err.message);
+      setError((t.errorLoadingDesktops || 'Error al cargar escritorios') + ': ' + err.message);
     } finally {
       setLoading(false);
     }
@@ -179,7 +183,7 @@ const DesktopManager = ({ onDesktopSelect, currentDesktop, onDesktopUpdate }) =>
   if (loading && desktops.length === 0) {
     return (
       <div className="desktop-manager">
-        <div className="loading-spinner">Cargando escritorio...</div>
+        <div className="loading-spinner">{t.loadingDesktop || 'Cargando escritorio...'}</div>
       </div>
     );
   }
@@ -187,14 +191,14 @@ const DesktopManager = ({ onDesktopSelect, currentDesktop, onDesktopUpdate }) =>
   return (
     <div className="desktop-manager">
       <div className="desktop-manager-header">
-        <h2>Cambiar de escritorio</h2>
+        <h2>{t.switchDesktop || 'Cambiar de escritorio'}</h2>
         <div className="header-actions">
           <div className="workspace-count">
             <span className="count-text">
-              {desktops.length}/{isPremium() ? '∞' : getLimit('desktops')} Escritorios
+              {desktops.length}/{isPremium() ? '∞' : getLimit('desktops')} {t.desktops || 'Escritorios'}
             </span>
             {!isPremium() && (
-              <span className="plan-badge">Plan gratuito</span>
+              <span className="plan-badge">{t.freePlan || 'Plan gratuito'}</span>
             )}
           </div>
           <button 
@@ -202,15 +206,15 @@ const DesktopManager = ({ onDesktopSelect, currentDesktop, onDesktopUpdate }) =>
             onClick={() => setShowCreateForm(true)}
             disabled={!canCreateMore('desktops', desktops.length)}
           >
-            + Crear nuevo escritorio
+            + {t.createNewDesktop || 'Crear nuevo escritorio'}
           </button>
         </div>
         
         {!isPremium() && !canCreateMore('desktops', desktops.length) && (
           <div className="limit-warning">
-            <span>Alcanzaste el limite del plan gratuito</span>
+            <span>{t.reachedFreePlanLimit || 'Alcanzaste el limite del plan gratuito'}</span>
             <button className="upgrade-btn-small" onClick={upgradeToPremium}>
-              Actualizar a premium
+              {t.upgradeToPremium}
             </button>
           </div>
         )}

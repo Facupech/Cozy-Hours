@@ -1,10 +1,14 @@
 import React, { useState, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../translations/translations';
 import { supabase } from '../lib/supabase';
 import './AccountSettings.css';
 
 const AccountSettings = ({ isOpen, onClose }) => {
   const { user, signOut } = useAuth();
+  const { language } = useLanguage();
+  const t = translations[language];
   const [activeTab, setActiveTab] = useState('profile');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
@@ -39,7 +43,7 @@ const AccountSettings = ({ isOpen, onClose }) => {
 
       if (error) throw error;
 
-      setMessage({ type: 'success', text: '¡Perfil actualizado exitosamente!' });
+      setMessage({ type: 'success', text: t.profileUpdatedSuccessfully || '¡Perfil actualizado exitosamente!' });
     } catch (error) {
       setMessage({ type: 'error', text: error.message });
     } finally {
@@ -53,13 +57,13 @@ const AccountSettings = ({ isOpen, onClose }) => {
     setMessage({ type: '', text: '' });
 
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setMessage({ type: 'error', text: 'Las contraseñas no coinciden' });
+      setMessage({ type: 'error', text: t.passwordsDoNotMatch || 'Las contraseñas no coinciden' });
       setLoading(false);
       return;
     }
 
     if (passwordData.newPassword.length < 6) {
-      setMessage({ type: 'error', text: 'La contraseña debe tener al menos 6 caracteres' });
+      setMessage({ type: 'error', text: t.passwordMinLength || 'La contraseña debe tener al menos 6 caracteres' });
       setLoading(false);
       return;
     }
@@ -71,7 +75,7 @@ const AccountSettings = ({ isOpen, onClose }) => {
 
       if (error) throw error;
 
-      setMessage({ type: 'success', text: '¡Contraseña actualizada exitosamente!' });
+      setMessage({ type: 'success', text: t.passwordUpdatedSuccessfully || '¡Contraseña actualizada exitosamente!' });
       setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
     } catch (error) {
       setMessage({ type: 'error', text: error.message });
@@ -86,13 +90,13 @@ const AccountSettings = ({ isOpen, onClose }) => {
 
     // Validar tipo de archivo
     if (!file.type.match('image.*')) {
-      setMessage({ type: 'error', text: 'Por favor, sube un archivo de imagen válido (JPEG, PNG, etc.)' });
+      setMessage({ type: 'error', text: t.pleaseUploadValidImage || 'Por favor, sube un archivo de imagen válido (JPEG, PNG, etc.)' });
       return;
     }
 
     // Validar tamaño de archivo (máx 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      setMessage({ type: 'error', text: 'La imagen es demasiado grande. El tamaño máximo permitido es de 5MB.' });
+      setMessage({ type: 'error', text: t.imageTooLarge || 'La imagen es demasiado grande. El tamaño máximo permitido es de 5MB.' });
       return;
     }
 
@@ -166,17 +170,17 @@ const AccountSettings = ({ isOpen, onClose }) => {
       
       setMessage({ 
         type: 'success', 
-        text: '¡Foto de perfil actualizada correctamente!' 
+        text: t.profilePictureUpdatedSuccessfully || '¡Foto de perfil actualizada correctamente!' 
       });
     } catch (error) {
       console.error('Error en handleAvatarUpload:', error);
       
-      let errorMessage = 'Error al subir la imagen. Por favor, inténtalo de nuevo.';
+      let errorMessage = t.errorUploadingImage || 'Error al subir la imagen. Por favor, inténtalo de nuevo.';
       
       if (error.statusCode === 403) {
-        errorMessage = 'Error de permisos. Asegúrate de que el bucket tenga las políticas de seguridad configuradas correctamente.';
+        errorMessage = t.permissionsError || 'Error de permisos. Asegúrate de que el bucket tenga las políticas de seguridad configuradas correctamente.';
       } else if (error.message.includes('bucket')) {
-        errorMessage = 'Error de configuración del almacenamiento. Por favor, verifica que el bucket exista y tenga los permisos adecuados.';
+        errorMessage = t.storageConfigurationError || 'Error de configuración del almacenamiento. Por favor, verifica que el bucket exista y tenga los permisos adecuados.';
       }
       
       setMessage({ 
@@ -189,7 +193,7 @@ const AccountSettings = ({ isOpen, onClose }) => {
   };
 
   const handleSignOut = async () => {
-    const confirmSignOut = window.confirm('¿Estás seguro de que quieres cerrar sesión?');
+    const confirmSignOut = window.confirm(t.confirmSignOut || '¿Estás seguro de que quieres cerrar sesión?');
     if (confirmSignOut) {
       await signOut();
       onClose();
@@ -202,7 +206,7 @@ const AccountSettings = ({ isOpen, onClose }) => {
     <div className="account-settings-overlay">
       <div className="account-settings-modal">
         <div className="modal-header">
-          <h2>Configuración de Cuenta</h2>
+          <h2>{t.accountSettings || 'Configuración de Cuenta'}</h2>
           <button className="close-btn" onClick={onClose}>×</button>
         </div>
 
@@ -212,19 +216,19 @@ const AccountSettings = ({ isOpen, onClose }) => {
               className={`tab ${activeTab === 'profile' ? 'active' : ''}`}
               onClick={() => setActiveTab('profile')}
             >
-              👤 Perfil
+              👤 {t.profile || 'Perfil'}
             </button>
             <button 
               className={`tab ${activeTab === 'security' ? 'active' : ''}`}
               onClick={() => setActiveTab('security')}
             >
-              🔒 Seguridad
+              🔒 {t.security || 'Seguridad'}
             </button>
             <button 
               className={`tab ${activeTab === 'account' ? 'active' : ''}`}
               onClick={() => setActiveTab('account')}
             >
-              ⚙️ Cuenta
+              ⚙️ {t.account || 'Cuenta'}
             </button>
           </div>
 
@@ -253,7 +257,7 @@ const AccountSettings = ({ isOpen, onClose }) => {
                     onClick={() => fileInputRef.current?.click()}
                     disabled={loading}
                   >
-                    Cambiar Foto
+                    {t.changePhoto || 'Cambiar Foto'}
                   </button>
                   <input
                     ref={fileInputRef}
@@ -265,28 +269,28 @@ const AccountSettings = ({ isOpen, onClose }) => {
                 </div>
 
                 <div className="form-group">
-                  <label>Nombre Completo</label>
+                  <label>{t.fullName || 'Nombre Completo'}</label>
                   <input
                     type="text"
                     value={profileData.fullName}
                     onChange={(e) => setProfileData(prev => ({ ...prev, fullName: e.target.value }))}
-                    placeholder="Tu nombre completo"
+                    placeholder={t.yourFullName || 'Tu nombre completo'}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label>Email</label>
+                  <label>{t.email}</label>
                   <input
                     type="email"
                     value={profileData.email}
                     disabled
                     className="disabled"
                   />
-                  <small>El email no se puede cambiar por razones de seguridad</small>
+                  <small>{t.emailCannotBeChanged || 'El email no se puede cambiar por razones de seguridad'}</small>
                 </div>
 
                 <button type="submit" className="btn-primary" disabled={loading}>
-                  {loading ? 'Guardando...' : 'Guardar Cambios'}
+                  {loading ? (t.saving || 'Guardando...') : (t.saveChanges || 'Guardar Cambios')}
                 </button>
               </form>
             </div>
@@ -296,29 +300,29 @@ const AccountSettings = ({ isOpen, onClose }) => {
             <div className="tab-content">
               <form onSubmit={handlePasswordUpdate}>
                 <div className="form-group">
-                  <label>Nueva Contraseña</label>
+                  <label>{t.newPassword || 'Nueva Contraseña'}</label>
                   <input
                     type="password"
                     value={passwordData.newPassword}
                     onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
-                    placeholder="Nueva contraseña (mín. 6 caracteres)"
+                    placeholder={t.newPasswordMinLength || 'Nueva contraseña (mín. 6 caracteres)'}
                     minLength={6}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label>Confirmar Nueva Contraseña</label>
+                  <label>{t.confirmNewPassword || 'Confirmar Nueva Contraseña'}</label>
                   <input
                     type="password"
                     value={passwordData.confirmPassword}
                     onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                    placeholder="Confirma tu nueva contraseña"
+                    placeholder={t.confirmNewPasswordPlaceholder || 'Confirma tu nueva contraseña'}
                     minLength={6}
                   />
                 </div>
 
                 <button type="submit" className="btn-primary" disabled={loading}>
-                  {loading ? 'Actualizando...' : 'Cambiar Contraseña'}
+                  {loading ? (t.updating || 'Actualizando...') : (t.changePassword || 'Cambiar Contraseña')}
                 </button>
               </form>
             </div>
@@ -327,19 +331,19 @@ const AccountSettings = ({ isOpen, onClose }) => {
           {activeTab === 'account' && (
             <div className="tab-content">
               <div className="account-info">
-                <h3>Información de la Cuenta</h3>
-                <p><strong>Email:</strong> {user?.email}</p>
-                <p><strong>ID de Usuario:</strong> {user?.id}</p>
-                <p><strong>Fecha de Registro:</strong> {new Date(user?.created_at).toLocaleDateString()}</p>
+                <h3>{t.accountInformation || 'Información de la Cuenta'}</h3>
+                <p><strong>{t.email}:</strong> {user?.email}</p>
+                <p><strong>{t.userId || 'ID de Usuario'}:</strong> {user?.id}</p>
+                <p><strong>{t.registrationDate || 'Fecha de Registro'}:</strong> {new Date(user?.created_at).toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US')}</p>
               </div>
 
               <div className="danger-zone">
-                <h3>Zona de Peligro</h3>
+                <h3>{t.dangerZone || 'Zona de Peligro'}</h3>
                 <button 
                   className="btn-danger"
                   onClick={handleSignOut}
                 >
-                  Cerrar Sesión
+                  {t.logout}
                 </button>
               </div>
             </div>

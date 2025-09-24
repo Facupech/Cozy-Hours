@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../translations/translations';
 import AccountSettings from './AccountSettings';
 import './AppHeader.css';
 
 const AppHeader = ({ showLogo = true, title = null }) => {
   const { user } = useAuth();
   const { subscription, isPremium } = useSubscription();
+  const { language } = useLanguage();
+  const t = translations[language];
   const [showAccountSettings, setShowAccountSettings] = useState(false);
 
   
   if (!user) return null;
 
   const getUserDisplayName = () => {
-    return user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuario';
+    return user?.user_metadata?.full_name || user?.email?.split('@')[0] || t.user || 'Usuario';
   };
 
   const getUserAvatar = () => {
@@ -48,12 +52,12 @@ const AppHeader = ({ showLogo = true, title = null }) => {
               {isPremium() ? (
                 <>
                   <span className="badge-icon">✨</span>
-                  <span className="badge-text">Premium</span>
+                  <span className="badge-text">{t.premium}</span>
                 </>
               ) : (
                 <>
                   <span className="badge-icon">🆓</span>
-                  <span className="badge-text">Gratuito</span>
+                  <span className="badge-text">{t.free}</span>
                 </>
               )}
             </div>
@@ -62,12 +66,12 @@ const AppHeader = ({ showLogo = true, title = null }) => {
             <button 
               className="user-profile-btn"
               onClick={() => setShowAccountSettings(true)}
-              title="Configuración de cuenta"
+              title={t.accountSettings || 'Configuración de cuenta'}
             >
               {getUserAvatar() ? (
                 <img 
                   src={getUserAvatar()} 
-                  alt="Avatar" 
+                  alt={t.avatar || 'Avatar'} 
                   className="user-avatar"
                 />
               ) : (

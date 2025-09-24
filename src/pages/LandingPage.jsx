@@ -1,9 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../translations/translations';
+import LanguageToggle from '../components/LanguageToggle';
 import './LandingPage.css';
 import './LandingPageExtras.css';
 
 const LandingPage = () => {
+  const { language } = useLanguage();
+  const t = translations[language];
+
   return (
     <div className="landing-page">
       {/* Encabezado */}
@@ -13,8 +19,9 @@ const LandingPage = () => {
             <h1>Cozy Hours</h1>
           </div>
           <nav className="nav">
-            <Link to="/login" className="nav-link">Login</Link>
-            <Link to="/register" className="nav-link btn-primary">Empezar</Link>
+            <LanguageToggle className="header-toggle" />
+            <Link to="/login" className="nav-link">{t.login}</Link>
+            <Link to="/register" className="nav-link btn-primary">{t.register}</Link>
           </nav>
         </div>
       </header>
@@ -24,18 +31,17 @@ const LandingPage = () => {
         <div className="container">
           <div className="hero-content">
             <h1 className="hero-title">
-              Adapte su espacio de trabajo a sus necesidades <span className="highlight">Estado Emocional</span>
+              {t.heroTitle} <span className="highlight">{t.heroTitleHighlight}</span>
             </h1>
             <p className="hero-subtitle">
-              Cozy Hours crea entornos digitales personalizados que responden a cómo te sientes,
-              ayudándote a ser más productivo y a mantener un equilibrio emocional a lo largo del día.
+              {t.heroSubtitle}
             </p>
             <div className="hero-actions">
               <Link to="/register" className="btn btn-primary btn-large">
-                Comience su viaje
+                {t.startJourney}
               </Link>
               <Link to="/login" className="btn btn-secondary btn-large">
-                Iniciar sesión
+                {t.signIn}
               </Link>
             </div>
           </div>
@@ -43,29 +49,29 @@ const LandingPage = () => {
             <div className="emotional-preview">
               <div className="preview-card happy">
                 <div className="card-emoji">😊</div>
-                <div className="card-title">Espacio de trabajo feliz</div>
+                <div className="card-title">{t.happyWorkspace}</div>
                 <div className="card-features">
-                  <div className="feature">🎵 Música alegre</div>
-                  <div className="feature">🌈 Colores brillantes</div>
-                  <div className="feature">✨ Vibraciones energéticas</div>
+                  <div className="feature">{t.happyMusic}</div>
+                  <div className="feature">{t.brightColors}</div>
+                  <div className="feature">{t.energeticVibes}</div>
                 </div>
               </div>
               <div className="preview-card focused">
                 <div className="card-emoji">🎯</div>
-                <div className="card-title">Modo enfocado</div>
+                <div className="card-title">{t.focusedMode}</div>
                 <div className="card-features">
-                  <div className="feature">🎧 Sonidos ambientales</div>
-                  <div className="feature">🔵 Colores tranquilos</div>
-                  <div className="feature">⏱️ Temporizador Pomodoro</div>
+                  <div className="feature">{t.ambientSounds}</div>
+                  <div className="feature">{t.calmColors}</div>
+                  <div className="feature">{t.pomodoroTimer}</div>
                 </div>
               </div>
               <div className="preview-card relaxed">
                 <div className="card-emoji">😌</div>
-                <div className="card-title">Espacio Relajado</div>
+                <div className="card-title">{t.relaxedSpace}</div>
                 <div className="card-features">
-                  <div className="feature">🌊 Sonidos de la naturaleza</div>
-                  <div className="feature">🟢 Colores suaves</div>
-                  <div className="feature">📝 Recordatorios suaves</div>
+                  <div className="feature">{t.natureSounds}</div>
+                  <div className="feature">{t.softColors}</div>
+                  <div className="feature">{t.gentleReminders}</div>
                 </div>
               </div>
             </div>
@@ -76,108 +82,108 @@ const LandingPage = () => {
       {/* Sección de precios */}
       <section className="pricing">
         <div className="container">
-          <h2 className="section-title">Elige tu plan perfecto</h2>
-          <p className="section-subtitle">Comience gratis y actualice en cualquier momento para desbloquear funciones premium</p>
+          <h2 className="section-title">{t.choosePlan}</h2>
+          <p className="section-subtitle">{t.planSubtitle}</p>
           
           <div className="pricing-grid">
             {/* Plan gratuito */}
             <div className="pricing-card free">
               <div className="plan-header">
                 <div className="plan-icon">🆓</div>
-                <h3 className="plan-name">Gratuito</h3>
+                <h3 className="plan-name">{t.free}</h3>
                 <div className="plan-price">
                   <span className="price">$0</span>
-                  <span className="period">/mes</span>
+                  <span className="period">{t.perMonth}</span>
                 </div>
               </div>
               
               <div className="plan-features">
                 <div className="feature-item">
                   <span className="check">✅</span>
-                  <span>Configuración básica del espacio de trabajo emocional</span>
+                  <span>{t.basicEmotionalSetup}</span>
                 </div>
                 <div className="feature-item">
                   <span className="check">✅</span>
-                  <span>Colección de música estándar</span>
+                  <span>{t.standardMusicCollection}</span>
                 </div>
                 <div className="feature-item">
                   <span className="check">✅</span>
-                  <span>Fondos de pantalla y temas básicos</span>
+                  <span>{t.basicWallpapers}</span>
                 </div>
                 <div className="feature-item limited">
                   <span className="check">📝</span>
-                  <span>Hasta 5 notas</span>
+                  <span>{t.upTo5Notes}</span>
                 </div>
                 <div className="feature-item limited">
                   <span className="check">✅</span>
-                  <span>Hasta 10 tareas</span>
+                  <span>{t.upTo10Tasks}</span>
                 </div>
                 <div className="feature-item limited">
                   <span className="check">🖥️</span>
-                  <span>Hasta 3 escritorios</span>
+                  <span>{t.upTo3Desktops}</span>
                 </div>
               </div>
               
               <Link to="/register" className="plan-btn free-btn">
-                Comience gratis
+                {t.startFree}
               </Link>
             </div>
 
             {/* Plan Premium */}
             <div className="pricing-card premium">
-              <div className="popular-badge">mas popular</div>
+              <div className="popular-badge">{t.mostPopular}</div>
               <div className="plan-header">
                 <div className="plan-icon">👑</div>
-                <h3 className="plan-name">Premium</h3>
+                <h3 className="plan-name">{t.premium}</h3>
                 <div className="plan-price">
                   <span className="price">$4.99</span>
-                  <span className="period">/mes</span>
+                  <span className="period">{t.perMonth}</span>
                 </div>
               </div>
               
               <div className="plan-features">
                 <div className="feature-item">
                   <span className="check">✨</span>
-                  <span>Todo gratis</span>
+                  <span>{t.everythingFree}</span>
                 </div>
                 <div className="feature-item premium-feature">
                   <span className="check">🎵</span>
-                  <span>Biblioteca de música premium exclusiva</span>
+                  <span>{t.premiumMusicLibrary}</span>
                 </div>
                 <div className="feature-item premium-feature">
                   <span className="check">🎨</span>
-                  <span>Fondos de pantalla y temas premium</span>
+                  <span>{t.premiumWallpapers}</span>
                 </div>
                 <div className="feature-item premium-feature">
                   <span className="check">⚙️</span>
-                  <span>Opciones de personalización avanzadas</span>
+                  <span>{t.advancedCustomization}</span>
                 </div>
                 <div className="feature-item premium-feature">
                   <span className="check">📝</span>
-                  <span>Notas ilimitadas</span>
+                  <span>{t.unlimitedNotes}</span>
                 </div>
                 <div className="feature-item premium-feature">
                   <span className="check">✅</span>
-                  <span>Tareas ilimitadas</span>
+                  <span>{t.unlimitedTasks}</span>
                 </div>
                 <div className="feature-item premium-feature">
                   <span className="check">🖥️</span>
-                  <span>Espacios de trabajo ilimitados</span>
+                  <span>{t.unlimitedWorkspaces}</span>
                 </div>
                 <div className="feature-item premium-feature">
                   <span className="check">🎯</span>
-                  <span>Apoyo prioritario</span>
+                  <span>{t.prioritySupport}</span>
                 </div>
               </div>
               
               <Link to="/register?trial=premium" className="plan-btn premium-btn">
-                Iniciar prueba premium
+                {t.startPremiumTrial}
               </Link>
             </div>
           </div>
           
           <div className="pricing-note">
-            <p>💡 Todos los planes incluyen funciones esenciales de productividad emocional. ¡Actualízalo o reduce tu plan cuando quieras!</p>
+            <p>{t.pricingNote}</p>
           </div>
         </div>
       </section>
@@ -185,37 +191,37 @@ const LandingPage = () => {
       {/* Sección de características */}
       <section className="features">
         <div className="container">
-          <h2 className="section-title">Todo lo que necesitas para la productividad emocional</h2>
+          <h2 className="section-title">{t.featuresTitle}</h2>
           <div className="features-grid">
             <div className="feature-card">
               <div className="feature-icon">🎭</div>
-              <h3>Perfiles emocionales</h3>
-              <p>Crea espacios de trabajo personalizados que se adapten a tu estado emocional actual y aumenten tu productividad.</p>
+              <h3>{t.emotionalProfiles}</h3>
+              <p>{t.emotionalProfilesDesc}</p>
             </div>
             <div className="feature-card">
               <div className="feature-icon">🎵</div>
-              <h3>Música adaptativa</h3>
-              <p>Listas de reproducción seleccionadas y sonidos ambientales que se ajustan automáticamente a tu estado de ánimo seleccionado.</p>
+              <h3>{t.adaptiveMusic}</h3>
+              <p>{t.adaptiveMusicDesc}</p>
             </div>
             <div className="feature-card">
               <div className="feature-icon">📝</div>
-              <h3>Notas inteligentes</h3>
-              <p>Captura pensamientos e ideas con notas que se adapten al tema de tu espacio de trabajo emocional.</p>
+              <h3>{t.smartNotes}</h3>
+              <p>{t.smartNotesDesc}</p>
             </div>
             <div className="feature-card">
               <div className="feature-icon">✅</div>
-              <h3>Tareas basadas en el estado de ánimo</h3>
-              <p>Organice sus tareas pendientes con un sistema de gestión de tareas que comprende sus niveles de energía emocional.</p>
+              <h3>{t.moodBasedTasks}</h3>
+              <p>{t.moodBasedTasksDesc}</p>
             </div>
             <div className="feature-card">
               <div className="feature-icon">⏰</div>
-              <h3>Temporizador Pomodoro</h3>
-              <p>Temporizador de enfoque incorporado con descansos diseñados para mantener su bienestar emocional.</p>
+              <h3>{t.pomodoroTimerFeature}</h3>
+              <p>{t.pomodoroTimerDesc}</p>
             </div>
             <div className="feature-card">
               <div className="feature-icon">🎨</div>
-              <h3>Temas personalizados</h3>
-              <p>Hermosos esquemas de colores y elementos visuales que cambian según tu estado emocional.</p>
+              <h3>{t.customThemes}</h3>
+              <p>{t.customThemesDesc}</p>
             </div>
           </div>
         </div>
@@ -225,10 +231,10 @@ const LandingPage = () => {
       <section className="cta">
         <div className="container">
           <div className="cta-content">
-            <h2>¿Estás listo para transformar tu espacio de trabajo?</h2>
-            <p>Únase a miles de usuarios que han descubierto el poder de la productividad emocional.</p>
+            <h2>{t.ctaTitle}</h2>
+            <p>{t.ctaSubtitle}</p>
             <Link to="/register" className="btn btn-primary btn-large">
-              Comience gratis
+              {t.startFree}
             </Link>
           </div>
         </div>
@@ -240,23 +246,23 @@ const LandingPage = () => {
           <div className="footer-content">
             <div className="footer-brand">
               <h3>Cozy Hours</h3>
-              <p>Productividad emocional para el espacio de trabajo moderno.</p>
+              <p>{t.footerTagline}</p>
             </div>
             <div className="footer-links">
               <div className="link-group">
-                <h4>Producto</h4>
-                <Link to="/register">Empezar</Link>
-                <Link to="/login">Iniciar sesión</Link>
+                <h4>{t.product}</h4>
+                <Link to="/register">{t.register}</Link>
+                <Link to="/login">{t.login}</Link>
               </div>
               <div className="link-group">
-                <h4>Soporte</h4>
-                <a href="#help">Centro de ayuda</a>
-                <a href="#contact">Contactanos</a>
+                <h4>{t.support}</h4>
+                <a href="#help">{t.helpCenter}</a>
+                <a href="#contact">{t.contactUs}</a>
               </div>
             </div>
           </div>
           <div className="footer-bottom">
-            <p>&copy; 2025 Cozy Hours. Todos los derechos reservados.</p>
+            <p>&copy; 2025 Cozy Hours. {t.allRightsReserved}</p>
           </div>
         </div>
       </footer>

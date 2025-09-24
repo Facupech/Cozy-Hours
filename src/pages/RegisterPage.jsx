@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../translations/translations';
+import LanguageToggle from '../components/LanguageToggle';
 import './AuthPages.css';
 
 const RegisterPage = () => {
@@ -17,6 +20,8 @@ const RegisterPage = () => {
   const [trialSelected, setTrialSelected] = useState(false);
   const { signUp } = useAuth();
   const { startPremiumTrial } = useSubscription();
+  const { language } = useLanguage();
+  const t = translations[language];
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -38,21 +43,21 @@ const RegisterPage = () => {
     const newErrors = {};
 
     if (!formData.email) {
-      newErrors.email = 'Se requiere correo electrónico';
+      newErrors.email = t.emailRequiredRegister;
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'El correo electrónico no es válido';
+      newErrors.email = t.invalidEmailRegister;
     }
 
     if (!formData.password) {
-      newErrors.password = 'Se requiere contraseña';
+      newErrors.password = t.passwordRequiredRegister;
     } else if (formData.password.length < 6) {
-      newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
+      newErrors.password = t.passwordMinLength;
     }
 
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Por favor confirma tu contraseña';
+      newErrors.confirmPassword = t.confirmPasswordRequired;
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Las contraseñas no coinciden';
+      newErrors.confirmPassword = t.passwordsDontMatch;
     }
 
     setErrors(newErrors);
@@ -81,13 +86,13 @@ const RegisterPage = () => {
                              error.message.includes('already in use') ||
                              error.message.includes('ya está en uso'))) {
           setErrors({ 
-            general: 'Este correo electrónico ya está registrado. Por favor, inicia sesión o utiliza otro correo.' 
+            general: t.emailAlreadyRegistered
           });
         } else if (error.message && error.message.includes('La contraseña debe tener al menos 6 caracteres')) {
-          setErrors({ password: 'La contraseña debe tener al menos 6 caracteres' });
+          setErrors({ password: t.passwordMinLength });
         } else {
           setErrors({ 
-            general: error.message || 'Ocurrió un error al registrar el usuario. Por favor, inténtalo de nuevo.' 
+            general: error.message || t.unexpectedErrorRegister
           });
         }
         setLoading(false);
@@ -106,7 +111,7 @@ const RegisterPage = () => {
       navigate('/emotional-setup');
     } catch (error) {
       console.error('Error durante el registro:', error);
-      setErrors({ general: 'Se produjo un error inesperado. Inténtalo de nuevo.' });
+      setErrors({ general: t.unexpectedErrorRegister });
     } finally {
       setLoading(false);
     }
@@ -115,12 +120,13 @@ const RegisterPage = () => {
   return (
     <div className="auth-page">
       <div className="auth-container">
+        <LanguageToggle className="auth-language-toggle" />
         <div className="auth-header">
           <Link to="/" className="back-link">
-            ← Volver a Inicio
+            {t.backToHomeRegister}
           </Link>
-          <h1 className="auth-title">Crea tu cuenta</h1>
-          <p className="auth-subtitle">Únete a Cozy Hours y comienza tu viaje de productividad emocional</p>
+          <h1 className="auth-title">{t.createAccount}</h1>
+          <p className="auth-subtitle">{t.joinCozyHours}</p>
         </div>
 
         <form className="auth-form" onSubmit={handleSubmit}>
@@ -131,7 +137,7 @@ const RegisterPage = () => {
           )}
 
           <div className="form-group">
-            <label htmlFor="email" className="form-label">Email</label>
+            <label htmlFor="email" className="form-label">{t.email}</label>
             <input
               type="email"
               id="email"
@@ -139,14 +145,14 @@ const RegisterPage = () => {
               value={formData.email}
               onChange={handleChange}
               className={`form-input ${errors.email ? 'error' : ''}`}
-              placeholder="Escribe tu email"
+              placeholder={t.emailPlaceholder}
               disabled={loading}
             />
             {errors.email && <span className="field-error">{errors.email}</span>}
           </div>
 
           <div className="form-group">
-            <label htmlFor="password" className="form-label">Contraseña</label>
+            <label htmlFor="password" className="form-label">{t.password}</label>
             <input
               type="password"
               id="password"
@@ -154,14 +160,14 @@ const RegisterPage = () => {
               value={formData.password}
               onChange={handleChange}
               className={`form-input ${errors.password ? 'error' : ''}`}
-              placeholder="Crear contraseña (min. 6 caracteres)"
+              placeholder={t.passwordPlaceholder}
               disabled={loading}
             />
             {errors.password && <span className="field-error">{errors.password}</span>}
           </div>
 
           <div className="form-group">
-            <label htmlFor="confirmPassword" className="form-label">Confirmar Contraseña</label>
+            <label htmlFor="confirmPassword" className="form-label">{t.confirmPassword}</label>
             <input
               type="password"
               id="confirmPassword"
@@ -169,7 +175,7 @@ const RegisterPage = () => {
               value={formData.confirmPassword}
               onChange={handleChange}
               className={`form-input ${errors.confirmPassword ? 'error' : ''}`}
-              placeholder="Confirmar contraseña"
+              placeholder={t.confirmPasswordPlaceholder}
               disabled={loading}
             />
             {errors.confirmPassword && <span className="field-error">{errors.confirmPassword}</span>}
@@ -183,19 +189,19 @@ const RegisterPage = () => {
             {loading ? (
               <>
                 <span className="loading-spinner"></span>
-                Creando cuenta...
+                {t.creatingAccount}
               </>
             ) : (
-              'Crear cuenta'
+              t.createAccountBtn
             )}
           </button>
         </form>
 
         <div className="auth-footer">
           <p>
-           ¿Ya tienes una cuenta?{' '}
+           {t.alreadyHaveAccount}{' '}
             <Link to="/login" className="auth-link">
-              Inicie sesión aquí
+              {t.signInHere}
             </Link>
           </p>
         </div>
