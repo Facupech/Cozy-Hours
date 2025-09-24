@@ -207,6 +207,8 @@ export const translations = {
     confirmDeleteNote: '¿Estás seguro de que quieres eliminar esta nota?',
     exampleNoteTitle: 'Nota de ejemplo',
     exampleNoteContent: 'Esta es una nota de ejemplo. ¡Pruébala!',
+    notes: 'notas',
+    freePlanNotesLimit: 'El plan gratuito está limitado a {limit} notas. ¡Actualiza a Premium para notas ilimitadas!',
     
     // Plan Selector
     chooseYourPlan: 'Escoger tu plan',
@@ -502,6 +504,8 @@ export const translations = {
     confirmDeleteNote: 'Are you sure you want to delete this note?',
     exampleNoteTitle: 'Example note',
     exampleNoteContent: 'This is an example note. Try it!',
+    notes: 'notes',
+    freePlanNotesLimit: 'Free plan is limited to {limit} notes. Upgrade to Premium for unlimited notes!',
     
     // Plan Selector
     chooseYourPlan: 'Choose your plan',
