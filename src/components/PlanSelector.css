@@ -1,0 +1,185 @@
+/* Estilos del selector de planes */
+
+.plan-selector {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.plan-selector-title {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+  text-shadow: none;
+}
+
+.plan-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .plan-options {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+.plan-option {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.plan-option:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border-color: rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.plan-option.active {
+  border-color: #4A90E2;
+  background: rgba(74, 144, 226, 0.1);
+  box-shadow: 0 8px 32px rgba(74, 144, 226, 0.2);
+}
+
+.plan-option.premium {
+  border-color: #ffd700;
+  background: rgba(255, 215, 0, 0.1);
+}
+
+.plan-option.premium:hover,
+.plan-option.premium.active {
+  border-color: #ffd700;
+  background: rgba(255, 215, 0, 0.2);
+  box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
+}
+
+.plan-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.plan-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.plan-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+  color: #333;
+}
+
+.plan-price {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #666;
+}
+
+.plan-features {
+  margin-bottom: 1.5rem;
+}
+
+.feature {
+  padding: 0.5rem 0;
+  color: #333;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+}
+
+.feature-limited {
+  padding: 0.5rem 0;
+  color: #666;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+}
+
+.premium-feature {
+  color: #ffd700;
+  font-weight: 500;
+}
+
+.current-plan {
+  background: #4A90E2;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.current-plan.premium {
+  background: #ffd700;
+  color: #333;
+}
+
+.upgrade-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.plan-note {
+  text-align: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+}
+
+.plan-note p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Animación para el cambio de plan */
+.plan-option.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.1) 100%);
+  opacity: 0;
+  animation: planGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes planGlow {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}

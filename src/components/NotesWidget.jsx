@@ -1,0 +1,254 @@
+import React, { useState, useEffect } from 'react';
+import { FiPlus, FiEdit2, FiTrash2, FiCheck, FiX } from 'react-icons/fi';
+import './NotesWidget.css';
+
+const STORAGE_KEY = 'cozy-notes';
+
+const NotesWidget = ({ onClose }) => {
+  const [notes, setNotes] = useState(() => {
+    // Cargar notas desde localStorage al iniciar
+    const savedNotes = localStorage.getItem(STORAGE_KEY);
+    return savedNotes ? JSON.parse(savedNotes) : [
+      { 
+        id: 1, 
+        title: 'Nota de ejemplo', 
+        content: 'Esta es una nota de ejemplo. ¡Pruébala!', 
+        updatedAt: new Date().toISOString() 
+      }
+    ];
+  });
+  const [loading, setLoading] = useState(false);
+  const [editingNote, setEditingNote] = useState(null);
+  const [newNote, setNewNote] = useState({ title: '', content: '' });
+  const [showAddForm, setShowAddForm] = useState(false);
+
+  // Generar un ID único para nuevas notas
+  const generateId = () => Math.max(0, ...notes.map(note => note.id)) + 1;
+
+  // Guardar notas en localStorage cuando cambian
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+  }, [notes]);
+
+  // Agregar una nueva nota
+  const handleAddNote = () => {
+    if (!newNote.title.trim()) return;
+    
+    const note = {
+      id: generateId(),
+      title: newNote.title.trim(),
+      content: newNote.content.trim(),
+      updatedAt: new Date().toISOString()
+    };
+    
+    const updatedNotes = [note, ...notes];
+    setNotes(updatedNotes);
+    setNewNote({ title: '', content: '' });
+    setShowAddForm(false);
+  };
+
+  // Actualizar una nota existente
+  const handleUpdateNote = (updatedNote) => {
+    if (!updatedNote.title.trim()) return;
+    
+    const updatedNotes = notes.map(note => 
+      note.id === updatedNote.id 
+        ? { 
+            ...updatedNote, 
+            title: updatedNote.title.trim(),
+            content: updatedNote.content.trim(),
+            updatedAt: new Date().toISOString() 
+          }
+        : note
+    );
+    
+    setNotes(updatedNotes);
+    setEditingNote(null);
+  };
+
+  // Eliminar una nota
+  const handleDeleteNote = (id) => {
+    if (window.confirm('¿Estás seguro de que quieres eliminar esta nota?')) {
+      setNotes(notes.filter(note => note.id !== id));
+      if (editingNote?.id === id) {
+        setEditingNote(null);
+      }
+    }
+  };
+
+  // Manejar la tecla Enter en los inputs
+  const handleKeyDown = (e, handler) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handler();
+    }
+  };
+
+  return (
+    <div className="notes-widget">
+      <div className="widget-header">
+        <h3>Mis Notas</h3>
+        <div className="widget-actions">
+          <button 
+            className="add-note-button"
+            onClick={() => setShowAddForm(true)}
+          >
+            <FiPlus /> Nueva nota
+          </button>
+          <button className="close-button" onClick={onClose}>
+            ×
+          </button>
+        </div>
+      </div>
+
+      <div className="notes-content">
+        {loading ? (
+          <div className="loading">Cargando...</div>
+        ) : (
+          <div className="notes-content-inner">
+            {showAddForm && (
+              <div className="note-form-container">
+                <div className="note-form">
+                  <input
+                    type="text"
+                    className="note-title-input"
+                    placeholder="Título de la nota"
+                    value={newNote.title}
+                    onChange={(e) => setNewNote({...newNote, title: e.target.value})}
+                    autoFocus
+                  />
+                  <textarea
+                    className="note-content-input"
+                    placeholder="Escribe tu nota aquí..."
+                    value={newNote.content}
+                    onChange={(e) => setNewNote({...newNote, content: e.target.value})}
+                    rows="4"
+                  />
+                  <div className="form-actions">
+                    <button 
+                      className="cancel-button"
+                      onClick={() => {
+                        setShowAddForm(false);
+                        setNewNote({ title: '', content: '' });
+                      }}
+                    >
+                      <FiX /> Cancelar
+                    </button>
+                    <button 
+                      className="save-button"
+                      onClick={handleAddNote}
+                      disabled={!newNote.title.trim()}
+                    >
+                      <FiCheck /> Guardar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {!showAddForm && notes.length === 0 && (
+              <div className="empty-notes">
+                <p>No hay notas aún</p>
+                <button 
+                  className="add-note-button"
+                  onClick={() => setShowAddForm(true)}
+                >
+                  <FiPlus /> Crear mi primera nota
+                </button>
+              </div>
+            )}
+
+            {!showAddForm && notes.length > 0 && (
+              <div className="notes-list">
+                <div className="notes-grid">
+                  {notes.map((note) => (
+                    <div key={note.id} className="note-card">
+                      {editingNote?.id === note.id ? (
+                        <div className="note-edit-form">
+                          <input
+                            type="text"
+                            className="note-title-input"
+                            value={editingNote.title}
+                            onChange={(e) => setEditingNote({...editingNote, title: e.target.value})}
+                            placeholder="Título"
+                            autoFocus
+                          />
+                          <textarea
+                            className="note-content-input"
+                            value={editingNote.content}
+                            onChange={(e) => setEditingNote({...editingNote, content: e.target.value})}
+                            placeholder="Contenido de la nota"
+                            rows="3"
+                          />
+                          <div className="note-actions">
+                            <button 
+                              className="save-button"
+                              onClick={() => handleUpdateNote(editingNote)}
+                              disabled={!editingNote.title.trim()}
+                            >
+                              <FiCheck /> Guardar
+                            </button>
+                            <button 
+                              className="cancel-button"
+                              onClick={() => setEditingNote(null)}
+                            >
+                              <FiX /> Cancelar
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="note-header">
+                            <h4 className="note-title">{note.title}</h4>
+                            <div className="note-actions">
+                              <button 
+                                className="icon-button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setEditingNote({...note});
+                                }}
+                                title="Editar nota"
+                              >
+                                <FiEdit2 />
+                              </button>
+                              <button 
+                                className="icon-button danger"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteNote(note.id);
+                                }}
+                                title="Eliminar nota"
+                              >
+                                <FiTrash2 />
+                              </button>
+                            </div>
+                          </div>
+                          <div className="note-content">
+                            {note.content || <span className="empty-content">Sin contenido</span>}
+                          </div>
+                          <div className="note-footer">
+                            <span className="note-date">
+                              {new Date(note.updatedAt).toLocaleDateString('es-ES', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </span>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default NotesWidget;
