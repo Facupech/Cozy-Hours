@@ -225,7 +225,6 @@ export const SubscriptionProvider = ({ children }) => {
     startPremiumTrial,
     upgradeToPremium,
     downgradeToFree,
-    downgradeToFree,
     hasPremiumFeature,
     isFirstLogin,
     resetFirstLoginFlag
